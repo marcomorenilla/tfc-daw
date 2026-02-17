@@ -1,0 +1,44 @@
+services:
+
+  db:
+    container_name: tfc-postgres
+    image: postgres:18-alpine
+    shm_size: 128mb
+    expose:
+      - 5432
+    networks:
+      - tfc
+    volumes:
+      - pg-data:/var/lib/postgresql/18/docker
+    env_file:
+      - .env
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    networks:
+      - tfc
+    ports:
+      - 8080:8080
+    
+
+  users:
+    container_name: micro-users
+    build: 
+      context: .
+      dockerfile: micro-users/Dockerfile
+    expose:
+      - 8000
+    networks:
+      - tfc
+    volumes:
+      - ./utils:/app/utils:ro
+      - ./micro-users/src:/app/src:ro
+
+volumes:
+  pg-data: {}
+
+
+networks:
+  tfc:
+    external: true

@@ -1,0 +1,17 @@
+# --- Entorno y Secretos ---
+.env
+.venv/
+.python-version
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Herramientas (uv / IDEs) ---
+.uv/
+.vscode/
+.idea/
+
+# --- Sistema ---
+.DS_Store

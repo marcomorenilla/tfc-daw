@@ -1,11 +1,15 @@
 from shared_utils.main import say_hi
+from fastapi import FastAPI, APIRouter
+from micro_users.api.v1 import auth
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
-def main():
-    print("Hello from micro-users!")
-    say_hi()
+
+app = FastAPI()
+
+app.include_router(auth.router, prefix='/api/v1')
 
 
 
-if __name__ == "__main__":
-    main()

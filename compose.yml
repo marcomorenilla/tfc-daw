@@ -9,34 +9,27 @@ services:
     networks:
       - tfc
     volumes:
-      - pg-data:/var/lib/postgresql/18/docker
+      - postgres-data:/var/lib/postgresql
     env_file:
       - .env
 
-  adminer:
-    container_name: adminer
-    image: adminer
-    networks:
-      - tfc
-    ports:
-      - 8080:8080
     
 
-  users:
-    container_name: micro-users
-    build: 
-      context: .
-      dockerfile: micro-users/Dockerfile
-    expose:
-      - 8000
-    networks:
-      - tfc
-    volumes:
-      - ./utils:/app/utils:ro
-      - ./micro-users/src:/app/src:ro
+  #users:
+  #  container_name: micro-users
+  #  build: 
+  #    context: .
+  #    dockerfile: micro-users/Dockerfile
+  #  expose:
+  #    - 8000
+  #  networks:
+  #    - tfc
+  #  volumes:
+  #    - ./utils:/app/utils:ro
+  #    - ./micro-users/src:/app/src:ro
 
 volumes:
-  pg-data: {}
+  postgres-data: {}
 
 
 networks:

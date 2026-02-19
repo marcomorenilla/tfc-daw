@@ -2,6 +2,7 @@
 .env
 .venv/
 .python-version
+nginx.conf
 
 # --- Python ---
 __pycache__/

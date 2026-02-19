@@ -15,18 +15,30 @@ services:
 
     
 
-  #users:
-  #  container_name: micro-users
-  #  build: 
-  #    context: .
-  #    dockerfile: micro-users/Dockerfile
-  #  expose:
-  #    - 8000
-  #  networks:
-  #    - tfc
-  #  volumes:
-  #    - ./utils:/app/utils:ro
-  #    - ./micro-users/src:/app/src:ro
+  users:
+    container_name: micro-users
+    build: 
+      context: .
+      dockerfile: micro-users/Dockerfile
+    expose:
+      - 8000
+    networks:
+      - tfc
+    volumes:
+      - ./utils:/app/utils
+      - ./micro-users:/app/micro-users
+
+  gateway:
+    image: nginx:alpine
+    container_name: tfc-gateway
+    ports:
+      - "80:80" 
+    networks:
+      - tfc
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - users
 
 volumes:
   postgres-data: {}

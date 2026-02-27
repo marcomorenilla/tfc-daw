@@ -9,14 +9,13 @@ dependencies = [
     "dotenv>=0.9.9",
     "fastapi>=0.129.0",
     "psycopg2-binary>=2.9.11",
+    "pwdlib[argon2]>=0.3.0",
     "pydantic[email]>=2.12.5",
-    "shared-utils",
+    "pyjwt>=2.11.0",
     "sqlalchemy>=2.0.46",
     "uvicorn>=0.41.0",
 ]
 
-[tool.uv.sources]
-shared-utils = {path="../shared-utils", editable=true}
 
 [build-system]
 requires = ["hatchling"]

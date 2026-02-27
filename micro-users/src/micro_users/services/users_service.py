@@ -2,9 +2,22 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from micro_users.models import User  
 from micro_users.schemas import UserInDB 
+from micro_users.core.security import get_password_hash, verify_password
 
 def get_user_by_email(email: str, db: Session):
     return db.query(User).filter(User.email == email).first()
+
+
+def get_all_users(db: Session):
+    users = db.query(User).all()
+
+    if not users:
+        raise HTTPException(status_code=404, detail="No hay usuarios registrados")
+
+    return users
+
+
+
 
 
 def create_user(user_in: UserInDB, db: Session):
@@ -17,7 +30,7 @@ def create_user(user_in: UserInDB, db: Session):
     new_user = User(
         email=user_in.email,
         name=user_in.name,
-        hashed_password=user_in.password, 
+        hashed_password=get_password_hash(user_in.password), 
         surname=user_in.surname,
         phone=user_in.phone
     )

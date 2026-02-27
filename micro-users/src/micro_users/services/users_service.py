@@ -1,13 +1,13 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from micro_users.models import User  
-from micro_users.schemas import UserCreateSchema 
+from micro_users.schemas import UserInDB 
 
 def get_user_by_email(email: str, db: Session):
     return db.query(User).filter(User.email == email).first()
 
 
-def create_user(user_in: UserCreateSchema, db: Session):
+def create_user(user_in: UserInDB, db: Session):
 
     db_user = get_user_by_email(user_in.email, db)
     

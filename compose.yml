@@ -32,7 +32,7 @@ services:
     image: nginx:alpine
     container_name: tfc-gateway
     ports:
-      - "80:80" 
+      - 8200:80 
     networks:
       - tfc
     volumes:
@@ -46,4 +46,4 @@ volumes:
 
 networks:
   tfc:
-    external: true
+    driver: bridge

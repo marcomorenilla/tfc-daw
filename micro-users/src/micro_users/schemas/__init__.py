@@ -1,1 +1,1 @@
-from .schemas import UserBaseSchema, UserCreateSchema, UserSchema
+from .schemas import User, UserInDB, UserSchema

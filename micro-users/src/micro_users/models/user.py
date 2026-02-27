@@ -11,5 +11,5 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(50), index=True, nullable=False)
     surname: Mapped[str] = mapped_column(String(100), index=True, nullable=False)
     phone: Mapped[str] = mapped_column(String(20), index=True, nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    disabled: Mapped[bool] = mapped_column(Boolean, default=True)
     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False)

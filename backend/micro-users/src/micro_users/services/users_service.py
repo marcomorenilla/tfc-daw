@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from micro_users.models import User  
-from micro_users.schemas import UserInDB 
-from micro_users.core.security import get_password_hash, verify_password
+from micro_users.schemas import UserCreate 
+from micro_users.core.hashing import get_password_hash, verify_password
 
 def get_user_by_email(email: str, db: Session):
     return db.query(User).filter(User.email == email).first()
@@ -18,9 +18,15 @@ def get_all_users(db: Session):
 
 
 
+def authenticate_user(email: str, password: str, db: Session):
+    user = get_user_by_email(email, db)
+    if not user:
+        return False
+    if not verify_password(password, user.hashed_password):
+        return False
+    return user
 
-
-def create_user(user_in: UserInDB, db: Session):
+def create_user(user_in: UserCreate, db: Session):
 
     db_user = get_user_by_email(user_in.email, db)
     
@@ -32,7 +38,9 @@ def create_user(user_in: UserInDB, db: Session):
         name=user_in.name,
         hashed_password=get_password_hash(user_in.password), 
         surname=user_in.surname,
-        phone=user_in.phone
+        phone=user_in.phone,
+        disabled=user_in.disabled,
+        is_superuser=user_in.is_superuser
     )
 
     db.add(new_user)

@@ -1,1 +1,1 @@
-from .users_service import get_user_by_email, create_user, get_all_users
+from .users_service import get_user_by_email, get_all_users, authenticate_user, create_user

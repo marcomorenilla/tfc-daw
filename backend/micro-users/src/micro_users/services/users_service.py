@@ -31,18 +31,31 @@ def get_all_users(db: Session):
 
 
 """
+Obtiene usuario por id
+Uso: perfil de usuario, actualización de usuario, eliminación de usuario
+"""
+
+
+def get_user_by_id(user_id: int, db: Session):
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        raise HTTPException(status_code=400, detail="Usuario no encontrado")
+
+    return user
+
+
+"""
 Método para actualización de usuarios en la bbdd
 Uso: Pantalla de adminstración y en perfil de cada usuario
 """
 
 
 def update_user(user_id: int, user_in: UserCreate, db: Session):
-    user = db.query(User).filter(User.id == user_id).first()
+    user = get_user_by_id(user_id, db)
 
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
-
-    print(json.dumps(user, indent=4, default=str))
 
     user.email = user_in.email
     user.name = user_in.name
@@ -65,10 +78,7 @@ Uso: Login
 
 
 def authenticate_user(email: str, password: str, db: Session):
-    print(email, password)
     user = get_user_by_email(email, db)
-    print(user.hashed_password)
-    print(json.dumps(user, indent=4, default=str))
     if not user:
         return False
     if not verify_password(password, user.hashed_password):

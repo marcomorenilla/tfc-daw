@@ -3,12 +3,17 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 env_path = Path(__file__).parent.parent.parent.parent / ".env"
-print(f'buscando .env en: {env_path}')
+print(f"buscando .env en: {env_path}")
 load_dotenv(dotenv_path=env_path)
+
+"""
+Clase de configuración con variables de entorno
+"""
+
 
 class Settings:
     PROJECT_NAME: str = "Micro Users"
-    
+
     POSTGRES_USER: str = os.getenv("POSTGRES_USER")
     POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD")
     POSTGRES_SERVER: str = os.getenv("POSTGRES_SERVER", "localhost")

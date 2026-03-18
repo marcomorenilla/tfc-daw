@@ -1,5 +1,9 @@
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
+"""
+Esquemas de la API
+"""
+
 
 class User(BaseModel):
     email: EmailStr
@@ -11,6 +15,10 @@ class User(BaseModel):
 
 
 class UserCreate(User):
+    password: str
+
+
+class UserUpdate(User):
     password: str
 
 

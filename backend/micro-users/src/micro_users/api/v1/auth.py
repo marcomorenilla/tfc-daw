@@ -10,6 +10,7 @@ from micro_users.services import (
     create_user,
     get_all_users,
     update_user,
+    get_user_by_id,
 )
 from micro_users.core.security import get_current_user, create_session_token
 
@@ -21,7 +22,17 @@ async def get_users_route(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    print("current user?", current_user)
     return get_all_users(db)
+
+
+@router.get("/users/{user_id}", response_model=UserSchema, tags=["Get user by id"])
+async def get_user_by_id_route(
+    user_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return get_user_by_id(user_id, db)
 
 
 @router.post("/token", response_model=Token, tags=["Login"])

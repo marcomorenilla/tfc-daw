@@ -4,4 +4,5 @@ from .users_service import (
     authenticate_user,
     create_user,
     update_user,
+    get_user_by_id,
 )

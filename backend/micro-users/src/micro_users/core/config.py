@@ -3,7 +3,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 env_path = Path(__file__).parent.parent.parent.parent / ".env"
-print(f"buscando .env en: {env_path}")
+print(f"INFO: buscando .env en: {env_path}")
 load_dotenv(dotenv_path=env_path)
 
 """

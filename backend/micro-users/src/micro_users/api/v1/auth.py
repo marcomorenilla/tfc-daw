@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
 
-from micro_users.schemas import UserSchema, Token, UserCreate, UserInDB
+from micro_users.schemas import UserSchema, Token, TokenData, UserCreate, UserInDB
 from micro_users.db import get_db
 from micro_users.models import User
 from micro_users.services import (
@@ -19,10 +19,20 @@ router = APIRouter()
 
 @router.get("/users", response_model=list[UserSchema], tags=["List users"])
 async def get_users_route(
-    current_user: User = Depends(get_current_user),
+    current_user: TokenData = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    print("current user?", current_user)
+    """
+    Lista todos los usuarios de la BBDD
+    @param current_user: TokenData con la información del usuario
+    @param db: Instancia de la BBDD
+    @return: Lista de usuarios
+    """
+
+    if not current_user.get("admin"):
+        raise HTTPException(
+            status_code=403, detail="No tienes permiso para ver esta ruta"
+        )
     return get_all_users(db)
 
 
@@ -32,6 +42,13 @@ async def get_user_by_id_route(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    """
+    Busca usuario por su id
+    @param current_user: TokenData con la información del usuario
+    @param db: Instancia de la BBDD
+    @param user_id: Id del usuario a buscar
+    @return: Usuario de la BBDD
+    """
     return get_user_by_id(user_id, db)
 
 
@@ -40,11 +57,26 @@ async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
 ):
+    """
+    Lista todos los usuarios de la BBDD
+    @param form_data: Datos del usuario en formulario
+    @param db: Instancia de la BBDD
+    @return: Token JWT con modelo TokenData
+    """
     user = authenticate_user(form_data.username.strip(), form_data.password.strip(), db)
     if not user:
-        raise HTTPException(status_code=400, detail="Incorrect email or password")
+        raise HTTPException(status_code=400, detail="Credenciales incorrectos")
 
-    jwt_payload = {"sub": str(user.id), "email": user.email, "admin": user.is_superuser}
+    if user.disabled:
+        raise HTTPException(
+            status_code=401, detail="No tienes permiso para acceder habla con el admin"
+        )
+    jwt_payload = {
+        "sub": str(user.id),
+        "email": user.email,
+        "admin": user.is_superuser,
+        "name": user.name,
+    }
     access_token = create_session_token(jwt_payload)
 
     return {"access_token": access_token, "token_type": "bearer"}
@@ -52,6 +84,12 @@ async def login(
 
 @router.post("/register", response_model=UserSchema, tags=["Register"], status_code=201)
 async def register(user_in: UserCreate, db: Session = Depends(get_db)):
+    """
+    Registra un usuario de la BBDD
+    @param user_in: Datos del usuario en modelo UserCreate
+    @param db: Instancia de la BBDD
+    @return: Usuario creado
+    """
     return create_user(user_in, db)
 
 
@@ -62,6 +100,18 @@ async def update_user_route(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    """
+    Modifica al usuario de la BBDD
+    @param current_user: TokenData con la información del usuario
+    @param db: Instancia de la BBDD
+    @param user_id: Id del usuario a modificar
+    @param user_in: Datos del usuario en modelo UserCreate
+    @return: Usuario modificado
+    """
+    if not current_user.get("admin"):
+        raise HTTPException(
+            status_code=403, detail="No tienes permiso para ver esta ruta"
+        )
     return update_user(user_id, user_in, db)
 
 
@@ -71,6 +121,17 @@ async def delete_user_route(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    """
+    Lista todos los usuarios de la BBDD
+    @param current_user: TokenData con la información del usuario
+    @param db: Instancia de la BBDD
+    @param user_id: Id del usuario a eliminar
+    @return: Usuario eliminado
+    """
+    if not current_user.get("admin"):
+        raise HTTPException(
+            status_code=403, detail="No tienes permiso para ver esta ruta"
+        )
     user = db.query(User).filter(User.id == user_id).first()
 
     if not user:

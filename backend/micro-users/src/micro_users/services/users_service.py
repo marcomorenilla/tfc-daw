@@ -3,25 +3,21 @@ from fastapi import HTTPException
 from micro_users.models import User
 from micro_users.schemas import UserCreate
 from micro_users.core.hashing import get_password_hash, verify_password
-import json
-
-"""
-Método para obtener un usuario por su email en la bbdd
-Uso: Login
-"""
 
 
 def get_user_by_email(email: str, db: Session):
+    """
+    Método para obtener un usuario por su email en la bbdd
+    Uso: Login
+    """
     return db.query(User).filter(User.email == email).first()
 
 
-"""
-Método para obtener todos los usuarios de la bbdd
-Uso: Pantalla de administración
-"""
-
-
 def get_all_users(db: Session):
+    """
+    Método para obtener todos los usuarios de la bbdd
+    Uso: Pantalla de administración
+    """
     users = db.query(User).all()
 
     if not users:
@@ -30,13 +26,11 @@ def get_all_users(db: Session):
     return users
 
 
-"""
-Obtiene usuario por id
-Uso: perfil de usuario, actualización de usuario, eliminación de usuario
-"""
-
-
 def get_user_by_id(user_id: int, db: Session):
+    """
+    Obtiene usuario por id
+    Uso: perfil de usuario, actualización de usuario, eliminación de usuario
+    """
     user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
@@ -45,13 +39,11 @@ def get_user_by_id(user_id: int, db: Session):
     return user
 
 
-"""
-Método para actualización de usuarios en la bbdd
-Uso: Pantalla de adminstración y en perfil de cada usuario
-"""
-
-
 def update_user(user_id: int, user_in: UserCreate, db: Session):
+    """
+    Método para actualización de usuarios en la bbdd
+    Uso: Pantalla de adminstración y en perfil de cada usuario
+    """
     user = get_user_by_id(user_id, db)
 
     if not user:
@@ -71,13 +63,11 @@ def update_user(user_id: int, user_in: UserCreate, db: Session):
     return user
 
 
-"""
-Comprueba que las credenciales sean válidad
-Uso: Login
-"""
-
-
 def authenticate_user(email: str, password: str, db: Session):
+    """
+    Comprueba que las credenciales sean válidad
+    Uso: Login
+    """
     user = get_user_by_email(email, db)
     if not user:
         return False
@@ -86,13 +76,11 @@ def authenticate_user(email: str, password: str, db: Session):
     return user
 
 
-"""
-Crea usuario en la bbdd
-Uso: Registro
-"""
-
-
 def create_user(user_in: UserCreate, db: Session):
+    """
+    Crea usuario en la bbdd
+    Uso: Registro
+    """
 
     db_user = get_user_by_email(user_in.email, db)
 

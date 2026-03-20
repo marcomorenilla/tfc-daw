@@ -38,4 +38,8 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    username: str | None = None
+    id: str | None = None
+    name: str | None = None
+    email: str | None = None
+    admin: bool | None = None
+    model_config = ConfigDict(from_attributes=True)

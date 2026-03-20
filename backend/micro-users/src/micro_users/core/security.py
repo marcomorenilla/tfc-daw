@@ -5,7 +5,6 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 
 from .config import settings
-from micro_users.services import get_user_by_email
 from micro_users.db.session import get_db
 from sqlalchemy.orm import Session
 
@@ -42,14 +41,19 @@ def get_current_user(
     """
 
     payload = decode_session_token(token)
-    print("decodificado get current user ", payload)
     if payload is None:
         return HTTPException(status_code=401, detail="Invalid token")
 
-    user = get_user_by_email(payload.get("email"), db)
-    if user is None:
+    tokenData = {
+        "id": payload.get("sub"),
+        "name": payload.get("name"),
+        "email": payload.get("email"),
+        "admin": payload.get("admin"),
+    }
+
+    if tokenData is None:
         return HTTPException(status_code=400, detail="No existe el usuario")
-    return user
+    return tokenData
 
 
 def decode_session_token(token: str):
@@ -61,7 +65,6 @@ def decode_session_token(token: str):
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
-        print("payload en decode_session", payload)
         return payload
     except jwt.ExpiredSignatureError as e:
         print(f"DEBUG: token invalido por: {e}")

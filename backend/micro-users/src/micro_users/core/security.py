@@ -44,16 +44,16 @@ def get_current_user(
     if payload is None:
         return HTTPException(status_code=401, detail="Invalid token")
 
-    tokenData = {
+    token_data = {
         "id": payload.get("sub"),
         "name": payload.get("name"),
         "email": payload.get("email"),
         "admin": payload.get("admin"),
     }
 
-    if tokenData is None:
+    if token_data is None:
         return HTTPException(status_code=400, detail="No existe el usuario")
-    return tokenData
+    return token_data
 
 
 def decode_session_token(token: str):

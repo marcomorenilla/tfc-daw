@@ -1,0 +1,9 @@
+---
+// src/pages/login.astro
+import LoginLayout from "../layouts/LoginLayout.astro";
+import { LoginForm } from "../components/login/LoginForm.tsx";
+---
+
+<LoginLayout title="Iniciar Sesión">
+  <LoginForm client:load />
+</LoginLayout>

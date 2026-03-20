@@ -1,0 +1,15 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+const { title } = Astro.props;
+---
+
+<BaseLayout title={title}>
+  <main
+    class="flex flex-col items-center justify-content-center bg-(--color-bg-dark) h-screen gap-8 p-20">
+    <article
+      class="bg-(--color-card) p-10 rounded-sm border-3 border-amber-200 shadow-xl shadow-amber-50">
+      <h1 class="font-bold text-5xl">Bienvenido de nuevo</h1>
+      <slot />
+    </article>
+  </main>
+</BaseLayout>

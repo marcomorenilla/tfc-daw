@@ -1,13 +1,11 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-import { AdminPage } from '../components/AdminPage';
+import Layout from "../layouts/BaseLayout.astro";
+import { AdminPage } from "../components/admin/AdminPage";
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout>
-	<!--<Welcome /> -->
-	<AdminPage client:load/>
+<Layout title="BiciIn">
+  <AdminPage client:load />
 </Layout>

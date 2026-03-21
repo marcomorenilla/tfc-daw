@@ -1,9 +1,9 @@
 ---
-// src/pages/login.astro
 import LoginLayout from "../layouts/LoginLayout.astro";
-import { LoginForm } from "../components/login/LoginForm.tsx";
+import LoginForm from "../components/login/LoginForm";
+const apiUrl = `${import.meta.env.URL_BASE}/users/api/v1/token`;
 ---
 
 <LoginLayout title="Iniciar Sesión">
-  <LoginForm client:load />
+  <LoginForm client:load apiUrl={apiUrl} />
 </LoginLayout>

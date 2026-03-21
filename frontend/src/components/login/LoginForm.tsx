@@ -1,10 +1,14 @@
-import type { SubmitEventHandler } from "react";
+import React from "react";
 import { handleLogin } from "../../services/loginHandler";
 
-export function LoginForm() {
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+interface LoginFormProps {
+  apiUrl: string;
+}
+
+export default function LoginForm({ apiUrl }: LoginFormProps) {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData: FormData = new FormData(e.target);
+    const formData: FormData = new FormData(e.currentTarget);
     const username: string = formData.get("username") as string;
     const password: string = formData.get("password") as string;
 
@@ -12,12 +16,25 @@ export function LoginForm() {
       username,
       password,
     };
-    handleLogin(credentials);
+
+    try {
+      const result = await handleLogin(credentials, apiUrl);
+      console.log("resultado", result);
+
+      if (result.access_token) {
+        localStorage.setItem(
+          "access_token",
+          JSON.stringify(result.access_token),
+        );
+      } else {
+        throw new Error("No ha llegado un access_token válido");
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <form
-      action=""
-      method="post"
       className="w-auto mt-5 flex flex-col gap-4 items-center justify-center"
       onSubmit={handleSubmit}
       id="login-form">
@@ -29,6 +46,7 @@ export function LoginForm() {
           type="text"
           name="username"
           id="username"
+          required
           className="border rounded-sm p-1 w-auto border-(--color-primary) outline-none focus:ring-4 focus:ring-(--color-primary)/50"
         />
       </section>
@@ -40,6 +58,7 @@ export function LoginForm() {
           type="password"
           name="password"
           id="password"
+          required
           className="border rounded-sm p-1 w-auto border-(--color-primary) outline-none focus:ring-4 focus:ring-(--color-primary)/50"
         />
       </section>
@@ -51,7 +70,7 @@ export function LoginForm() {
         </button>
         <button
           className="cursor-pointer p-2 text-(--color-primary) rounded-sm font-semibold bg-white border border-(--color-primary) hover:bg-(--color-primary) hover:text-white "
-          type="submit">
+          type="button">
           Register
         </button>
       </section>

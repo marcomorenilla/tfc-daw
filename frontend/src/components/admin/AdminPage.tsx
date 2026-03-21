@@ -49,7 +49,7 @@ export const AdminPage = () => {
 
 
 
-    const addUser = (e: React.SubmitEvent<HTMLFormElement>) => {
+    const addUser = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(users);
         const formData = new FormData(e.currentTarget);
@@ -64,7 +64,7 @@ export const AdminPage = () => {
             disabled: false,
             super: false
         }])
-        e.target.reset()
+        e.currentTarget.reset()
     }
 
     const openModal = (user: User) => {

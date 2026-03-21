@@ -9,9 +9,15 @@ Base.metadata.create_all(bind=engine)
 
 origins = ["*"]
 
-app = FastAPI(title="Microservicio usuarios", version="0.0.1")
+app = FastAPI(
+    docs_url="/users/docs",
+    redoc_url="/users/redocs",
+    openapi_url="/users/openapi.json",
+    title="Microservicio usuarios",
+    version="0.0.1",
+)
 
-app.include_router(auth.router, prefix="/api/v1")
+app.include_router(auth.router, prefix="/users/api/v1")
 
 app.add_middleware(
     CORSMiddleware,

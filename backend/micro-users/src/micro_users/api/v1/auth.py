@@ -17,7 +17,7 @@ from micro_users.core.security import get_current_user, create_session_token
 router = APIRouter()
 
 
-@router.get("/users", response_model=list[UserSchema], tags=["List users"])
+@router.get("/", response_model=list[UserSchema], tags=["List users"])
 async def get_users_route(
     current_user: TokenData = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -36,7 +36,7 @@ async def get_users_route(
     return get_all_users(db)
 
 
-@router.get("/users/{user_id}", response_model=UserSchema, tags=["Get user by id"])
+@router.get("/{user_id}", response_model=UserSchema, tags=["Get user by id"])
 async def get_user_by_id_route(
     user_id: int,
     current_user: User = Depends(get_current_user),
@@ -50,6 +50,20 @@ async def get_user_by_id_route(
     @return: Usuario de la BBDD
     """
     return get_user_by_id(user_id, db)
+
+
+@router.post("/validate", response_model=TokenData, tags=["Validate user"])
+async def validate_user(
+    get_current_user: User = Depends(get_current_user),
+):
+    """
+    Valida el token de un usuario que pregunta a esta ruta
+    @param get_current_user: Toke con la información del usuario
+    @return: TokenData con la información del usuario
+    """
+    if not get_current_user:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    return get_current_user
 
 
 @router.post("/token", response_model=Token, tags=["Login"])
@@ -93,7 +107,7 @@ async def register(user_in: UserCreate, db: Session = Depends(get_db)):
     return create_user(user_in, db)
 
 
-@router.put("/users/{user_id}", response_model=UserInDB, tags=["Update user"])
+@router.put("/{user_id}", response_model=UserInDB, tags=["Update user"])
 async def update_user_route(
     user_id: int,
     user_in: UserCreate,
@@ -115,7 +129,7 @@ async def update_user_route(
     return update_user(user_id, user_in, db)
 
 
-@router.delete("/users/{user_id}", response_model=UserSchema, tags=["Delete user"])
+@router.delete("/{user_id}", response_model=UserSchema, tags=["Delete user"])
 async def delete_user_route(
     user_id: int,
     current_user: User = Depends(get_current_user),

@@ -12,6 +12,8 @@
   --color-text-muted: #64748b;
   --color-error: #ef4444;
   --color-border: #e2e8f0;
+  --color-bg-start: #c9d7d4;
+  --color-bg-end: #d2deda;
 }
 
 :global(.dark) {

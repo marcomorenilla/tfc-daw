@@ -1,11 +1,17 @@
-import React from "react";
+import { useState } from "react";
 import { handleLogin } from "../../services/loginHandler";
+import { ErrorModal } from "./ErrorModal.tsx";
+import { useStore } from "@nanostores/react";
+import { $apiLoginUrl } from "@/store/authStore.ts";
 
-interface LoginFormProps {
-  apiUrl: string;
+interface LoginProps {
+  readonly onSwitch: () => void;
 }
 
-export default function LoginForm({ apiUrl }: LoginFormProps) {
+export default function LoginForm({ onSwitch }: LoginProps) {
+  const [isErrored, setIsErrored] = useState(false);
+  const apiUrl = useStore($apiLoginUrl);
+
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData: FormData = new FormData(e.currentTarget);
@@ -19,7 +25,6 @@ export default function LoginForm({ apiUrl }: LoginFormProps) {
 
     try {
       const result = await handleLogin(credentials, apiUrl);
-      console.log("resultado", result);
 
       if (result.access_token) {
         localStorage.setItem(
@@ -30,64 +35,80 @@ export default function LoginForm({ apiUrl }: LoginFormProps) {
         throw new Error("No ha llegado un access_token válido");
       }
     } catch (error) {
+      setIsErrored(true);
       console.error(error);
     }
+    e.target.reset();
   };
   return (
     <>
       <form
-        className="w-auto mt-5 border-b-3 border-orange-500/75 pb-5 flex flex-col gap-4 items-center justify-center"
+        className="w-full animate-opacity mt-2 pb-6 flex flex-col gap-6"
         onSubmit={handleSubmit}
         id="login-form">
-        <section className="relative flex flex-col gap-3">
+        <section className="relative flex flex-col gap-2">
           <label
             htmlFor="username"
-            className="font-bold text-lg text-orange-500 text-xl">
-            Username:
+            className="font-medium text-sm text-gray-500">
+            Correo electrónico:
           </label>
           <input
             type="text"
             name="username"
             id="username"
             required
-            className="border rounded-sm p-1 w-auto bg-white/50 border-white/50 outline-none focus:ring-4 focus:ring-(--color-primary)/50"
+            placeholder="ejemplo@email.com"
+            className="border border-gray-200 rounded-xl p-3 w-full bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
           />
         </section>
-        <section className="relative flex flex-col gap-3">
+        <section className="relative flex flex-col gap-2">
           <label
             htmlFor="password"
-            className="font-bold text-lg text-orange-500 text-xl">
-            Password:
+            className="font-medium text-sm text-gray-500">
+            Contraseña:
           </label>
           <input
             type="password"
             name="password"
             id="password"
             required
-            className="border rounded-sm p-1 bg-white/50 w-auto border-white/50 outline-none focus:ring-4 focus:ring-(--color-primary)/50"
+            placeholder="••••••••"
+            className="border border-gray-200 rounded-xl p-3 w-full bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400 transition"
           />
         </section>
-        <section className=" text-orange-500  flex items-center justify-center font-bold">
+
+        <section className="flex items-center justify-end font-medium">
           <a
             href="/reset-password"
-            className="cursor-pointer md:text-lg text-(--color-primary-dark) hover:border-b hover:border-white hover:text-white">
-            He olvidado mi contraseña
+            className="cursor-pointer text-sm text-teal-600 hover:text-teal-700 hover:underline">
+            ¿Olvidaste tu contraseña?
           </a>
         </section>
-        <section className="flex gap-2">
+
+        <section className="flex">
           <button
-            className="cursor-pointer p-2 font-bold md:text-lg text-white rounded-sm   bg-(--color-primary) hover:border hover:border-(--color-primary) hover:text-(--color-primary)  hover:bg-(--color-bg) "
+            className="cursor-pointer w-full p-3.5 font-semibold text-lg text-white rounded-xl bg-teal-600 hover:bg-teal-700 transition duration-150 shadow-sm"
             type="submit">
-            Entrar
+            Iniciar Sesión
           </button>
         </section>
       </form>
-      <section className="flex md:text-lg flex-col justify-center items-center gap-1 p-1 text-orange-500 font-bold">
-        <p>¿No tienes cuenta?</p>
-        <button className="text-(--color-primary-dark) hover:text-white hover:border-b hover:border-white">
-          Crear cuenta
+
+      <section className="flex flex-col justify-center items-center gap-3 pt-6 border-t border-gray-100 text-gray-600">
+        <p className="text-sm">¿No tienes cuenta?</p>
+        <button
+          onClick={onSwitch}
+          className="font-semibold text-teal-600 hover:text-teal-700 hover:underline">
+          Regístrate
         </button>
       </section>
+      {isErrored && (
+        <ErrorModal
+          setIsErrored={setIsErrored}
+          message="No se encuentra al usuario en el sistema, regístrate para obtener la
+          experiencia completa."
+        />
+      )}
     </>
   );
 }

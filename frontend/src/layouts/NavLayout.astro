@@ -1,0 +1,21 @@
+<header
+  class="flex bg-teal-600 text-white font-bold justify-between items-center p-7">
+  <section class="rounded-full object-top-left overflow-hidden">
+    <a href="/">
+      <img
+        src="/src/assets/logo-bicival.png"
+        alt="Logo de la tienda"
+        class="h-20 w-20 object-fit"
+      /></a
+    >
+  </section>
+  <section>
+    <ul
+      class="flex text-xl gap-5 [&_li]:hover:text-amber-200 [&_li]:hover:cursor-pointer">
+      <li>Inicio</li>
+      <li>Valoraciones</li>
+      <li>Foro</li>
+    </ul>
+  </section>
+  <slot />
+</header>

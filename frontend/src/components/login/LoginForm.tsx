@@ -89,7 +89,7 @@ export default function LoginForm({ onSwitch }: LoginProps) {
           <button
             className="cursor-pointer w-full p-3.5 font-semibold text-lg text-white rounded-xl bg-teal-600 hover:bg-teal-700 transition duration-150 shadow-sm"
             type="submit">
-            Iniciar Sesión
+            Iniciar sesión
           </button>
         </section>
       </form>

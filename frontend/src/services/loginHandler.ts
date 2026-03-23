@@ -19,8 +19,7 @@ export async function handleLogin(credentials: LoginCredentials, apiUrl: string)
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `Error en el login: ${response.status}`);
+      throw new Error(`Error en el login: ${response.status}`);
     }
 
     const data = await response.json();

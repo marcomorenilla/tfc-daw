@@ -12,8 +12,8 @@
   --color-text-muted: #64748b;
   --color-error: #ef4444;
   --color-border: #e2e8f0;
-  --color-bg-start: #c9d7d4;
-  --color-bg-end: #d2deda;
+  --color-bg-start: #b9b9b9;
+  --color-bg-end: #f0f0f0;
 }
 
 :global(.dark) {
@@ -27,4 +27,17 @@
 
 body {
   font-family: "Noto Sans", sans-serif;
+}
+
+.animate-opacity {
+  animation: opacity-change 0.5s ease-in-out;
+}
+
+@keyframes opacity-change {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

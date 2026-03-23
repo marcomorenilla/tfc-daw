@@ -11,14 +11,20 @@
   "dependencies": {
     "@astrojs/node": "^9.0.0",
     "@astrojs/react": "^4.0.0",
+    "@nanostores/react": "^1.1.0",
     "@tailwindcss/vite": "^4.0.0",
     "astro": "^5.0.0",
+    "nanostores": "^1.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwindcss": "^4.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3"
+    "@types/react-dom": "^19.2.3",
+    "standard": "^17.1.2"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/standard/eslintrc.json"
   }
 }

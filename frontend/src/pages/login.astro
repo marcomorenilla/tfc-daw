@@ -1,9 +1,10 @@
 ---
-import LoginLayout from "../layouts/LoginLayout.astro";
-import LoginForm from "../components/login/LoginForm";
-const apiUrl = `${import.meta.env.URL_BASE}/users/api/v1/token`;
+import LoginLayout from "@/layouts/LoginLayout.astro";
+import AuthContainer from "@/components/login/AuthContainer";
+import FooterLayout from "@/layouts/FooterLayout.astro";
 ---
 
 <LoginLayout title="Iniciar Sesión">
-  <LoginForm client:load apiUrl={apiUrl} />
+  <AuthContainer client:load />
 </LoginLayout>
+<FooterLayout />

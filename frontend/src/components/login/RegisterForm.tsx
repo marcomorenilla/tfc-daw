@@ -2,9 +2,18 @@ import React, { useState } from "react";
 import { ErrorModal } from "./ErrorModal.tsx";
 import { useStore } from "@nanostores/react";
 import { $apiRegisterUrl } from "@/store/authStore.ts";
+import { handleRegister } from "@/services/registerHandler.ts";
 
 interface RegisterProps {
   readonly onSwitch: () => void;
+}
+
+interface RegisterData {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+  phone: string;
 }
 
 export default function RegisterForm({ onSwitch }: RegisterProps) {
@@ -13,6 +22,29 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("enviado", apiUrl);
+    const formData: FormData = new FormData(e.currentTarget);
+    const name: string = formData.get("name") as string;
+    const surname: string = formData.get("surname") as string;
+    const email: string = formData.get("email") as string;
+    const password: string = formData.get("password") as string;
+    const phone: string = formData.get("phone") as string;
+
+    const credentials: RegisterData = {
+      name,
+      surname,
+      email,
+      password,
+      phone,
+    };
+    handleRegister(credentials, apiUrl)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    e.target.reset();
   };
   return (
     <>
@@ -49,15 +81,13 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
           />
         </section>
         <section className="relative flex flex-col gap-2">
-          <label
-            htmlFor="username"
-            className="font-medium text-sm text-gray-500">
+          <label htmlFor="email" className="font-medium text-sm text-gray-500">
             Correo electrónico:
           </label>
           <input
             type="text"
-            name="username"
-            id="username"
+            name="email"
+            id="email"
             required
             placeholder="ejemplo@email.com"
             className="border border-gray-200 rounded-xl p-3 w-full bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"

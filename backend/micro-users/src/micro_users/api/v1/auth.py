@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Response
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -68,6 +68,7 @@ async def validate_user(
 
 @router.post("/token", response_model=Token, tags=["Login"])
 async def login(
+    response: Response,
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
 ):
@@ -93,7 +94,16 @@ async def login(
     }
     access_token = create_session_token(jwt_payload)
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    response.set_cookie(
+        key="tfc_access_token",
+        value=access_token,
+        httponly=True,
+        secure=False,  # TODO: Cambiar a true cuando añada https
+        samesite="lax",
+        max_age=3600,
+    )
+
+    return {"access_token": access_token, "token_type": "bearer", "response": response}
 
 
 @router.post("/register", response_model=UserSchema, tags=["Register"], status_code=201)

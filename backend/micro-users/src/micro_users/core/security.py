@@ -2,7 +2,6 @@ import jwt
 from typing import Annotated
 
 from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
 
 from .config import settings
 from micro_users.db.session import get_db
@@ -10,8 +9,10 @@ from sqlalchemy.orm import Session
 
 from datetime import datetime, timedelta, timezone
 
+from .oauth_schema import OAuth2PasswordBearerCookie
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/token")
+
+oauth2_scheme = OAuth2PasswordBearerCookie(tokenUrl="api/v1/token")
 
 
 def create_session_token(data: dict):

@@ -12,6 +12,8 @@ export default function LoginForm({ onSwitch }: LoginProps) {
   const [isErrored, setIsErrored] = useState(false);
   const apiUrl = useStore($apiLoginUrl);
 
+  const handleCloseModal = () => setIsErrored(false);
+
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData: FormData = new FormData(e.currentTarget);
@@ -104,7 +106,7 @@ export default function LoginForm({ onSwitch }: LoginProps) {
       </section>
       {isErrored && (
         <ErrorModal
-          setIsErrored={setIsErrored}
+          handleClose={handleCloseModal}
           message="No se encuentra al usuario en el sistema, regístrate para obtener la
           experiencia completa."
         />

@@ -3,6 +3,7 @@ import { ErrorModal } from "./ErrorModal.tsx";
 import { useStore } from "@nanostores/react";
 import { $apiRegisterUrl } from "@/store/authStore.ts";
 import { handleRegister } from "@/services/registerHandler.ts";
+import { ErrorSpan } from "./ErrorSpan.tsx";
 
 interface RegisterProps {
   readonly onSwitch: () => void;
@@ -17,45 +18,74 @@ interface RegisterData {
 }
 
 const initialRegisterError = {
-  name: false,
-  surname: false,
-  email: false,
-  password: false,
-  phone: false,
+  nameError: { error: false, message: "" },
+  emailError: { error: false, message: "" },
+  surnameError: { error: false, message: "" },
+  passwordError: { error: false, message: "" },
+  phoneError: { error: false, message: "" },
 };
 
 export default function RegisterForm({ onSwitch }: RegisterProps) {
   const apiUrl = useStore($apiRegisterUrl);
-  const [error, setError] = useState({
-    nameError: { error: false, message: "" },
-    emailError: { error: false, message: "" },
-    surnameError: { error: false, message: "" },
-    passwordError: { error: false, message: "" },
-    phoneError: { error: false, message: "" },
-  });
+  const [error, setError] = useState(initialRegisterError);
 
   const onRegister = async (credentials: RegisterData, apiUrl: string) => {
     await handleRegister(credentials, apiUrl);
   };
 
   const validateFields = (credentials: RegisterData) => {
-    console.log(credentials);
-
     const { name, surname, email, password, phone } = credentials;
-    const emptyRegex = /^·*$/;
-    const emailRegex = /^[\w\d/.]+@[\w\d/.]+\.(com|es|dev|org)$/;
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).{6,}$/;
+    let newErrors = { ...error };
 
-    if (!emptyRegex.test(name)) {
-      const { nameError } = error;
-      const newNameError = {
+    if (!name.trim()) {
+      newErrors.nameError = {
         error: true,
-        message: "El nombre del usuario no puede estar vacío",
+        message: "El nombre no puede estar vacío",
       };
-      setError({ ...error, nameError: newNameError });
+    } else {
+      newErrors.nameError = { error: false, message: "" };
     }
-    console.log("error", error);
-    console.log("empty name", emailRegex.test(name));
+
+    if (!surname.trim()) {
+      newErrors.surnameError = {
+        error: true,
+        message: "El apellido no puede estar vacío",
+      };
+    } else {
+      newErrors.surnameError = { error: false, message: "" };
+    }
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).{6,}$/;
+    if (!passwordRegex.test(password)) {
+      newErrors.passwordError = {
+        error: true,
+        message: "Contraseña demasiado débil",
+      };
+    } else {
+      newErrors.passwordError = { error: false, message: "" };
+    }
+
+    const phoneRegex = /^\+?(\d[\s-]?){7,15}\d$/;
+    if (!phoneRegex.test(phone)) {
+      newErrors.phoneError = {
+        error: true,
+        message: "Número con formato incorrecto",
+      };
+    } else {
+      newErrors.phoneError = { error: false, message: "" };
+    }
+
+    const emailRegex = /^[\w\d/.]+@[\w\d/.]+\.(com|es|dev|org)$/;
+    if (!emailRegex.test(email)) {
+      newErrors.emailError = {
+        error: true,
+        message: "Email con formato incorrecto",
+      };
+    } else {
+      newErrors.emailError = { error: false, message: "" };
+    }
+
+    setError(newErrors);
   };
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -76,7 +106,7 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
       phone,
     };
     validateFields(credentials);
-    //onRegister(credentials, apiUrl);
+    onRegister(credentials, apiUrl);
     e.target.reset();
   };
   return (
@@ -97,7 +127,9 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
             className="border border-gray-200 rounded-xl p-3 w-full bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
           />
         </section>
-        {error.nameError.error && <span>{error.nameError.message}</span>}
+        {error.nameError.error && (
+          <ErrorSpan>{error.nameError.message}</ErrorSpan>
+        )}
         <section className="relative flex flex-col gap-2">
           <label
             htmlFor="surname"
@@ -112,6 +144,9 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
             className="border border-gray-200 rounded-xl p-3 w-full bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
           />
         </section>
+        {error.surnameError.error && (
+          <ErrorSpan>{error.surnameError.message}</ErrorSpan>
+        )}
         <section className="relative flex flex-col gap-2">
           <label htmlFor="email" className="font-medium text-sm text-gray-500">
             Correo electrónico:
@@ -124,6 +159,9 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
             className="border border-gray-200 rounded-xl p-3 w-full bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
           />
         </section>
+        {error.emailError.error && (
+          <ErrorSpan>{error.emailError.message}</ErrorSpan>
+        )}
         <section className="relative flex flex-col gap-2">
           <label
             htmlFor="password"
@@ -138,6 +176,9 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
             className="border border-gray-200 rounded-xl p-3 w-full bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400 transition"
           />
         </section>
+        {error.passwordError.error && (
+          <ErrorSpan>{error.passwordError.message}</ErrorSpan>
+        )}
         <section className="relative flex flex-col gap-2">
           <label htmlFor="name" className="font-medium text-sm text-gray-500">
             Teléfono:
@@ -150,6 +191,9 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
             className="border border-gray-200 rounded-xl p-3 w-full bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
           />
         </section>
+        {error.phoneError.error && (
+          <ErrorSpan>{error.phoneError.message}</ErrorSpan>
+        )}
 
         <section className="flex">
           <button

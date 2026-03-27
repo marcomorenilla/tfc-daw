@@ -1,5 +1,5 @@
 ---
-import Profile from "@/components/navigation/Profile";
+import NavBar from "@/components/navigation/NavBar";
 import BaseLayout from "./BaseLayout.astro";
 import NavLayout from "./NavLayout.astro";
 import FooterLayout from "./FooterLayout.astro";
@@ -9,7 +9,7 @@ const { title } = Astro.props;
 
 <BaseLayout title={title}>
   <NavLayout>
-    <Profile client:load />
+    <NavBar client:load />
   </NavLayout>
   <main>
     <slot />

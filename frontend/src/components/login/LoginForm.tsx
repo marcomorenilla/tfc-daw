@@ -29,10 +29,7 @@ export default function LoginForm({ onSwitch }: LoginProps) {
       const result = await handleLogin(credentials, apiUrl);
 
       if (result.access_token) {
-        localStorage.setItem(
-          "access_token",
-          JSON.stringify(result.access_token),
-        );
+        location.href = "/";
       } else {
         throw new Error("No ha llegado un access_token válido");
       }

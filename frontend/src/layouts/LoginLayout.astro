@@ -2,18 +2,18 @@
 import BaseLayout from "./BaseLayout.astro";
 import NavLayout from "./NavLayout.astro";
 import FooterLayout from "./FooterLayout.astro";
-import Profile from "@/components/navigation/Profile";
+import NavBar from "@/components/navigation/NavBar";
 
 const { title } = Astro.props;
 ---
 
 <BaseLayout title={title}>
   <NavLayout>
-    <Profile client:load />
+    <NavBar client:load />
   </NavLayout>
 </BaseLayout>
 <main
-  class="flex items-center justify-content-center h-screen bg-linear-to-br from-amber-50 via-amber-100 to-amber-50">
+  class="flex items-center justify-content-center h-auto pt-5 pb-5 bg-linear-to-br from-amber-50 via-amber-100 to-amber-50">
   <div
     class="flex flex-col items-center relative gap-5 justify-center w-full lg:w-3/5">
     <h1

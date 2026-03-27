@@ -1,4 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
+from fastapi import Request, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from typing import Optional
 
 """
 Esquemas de la API

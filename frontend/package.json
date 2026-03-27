@@ -23,8 +23,5 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "standard": "^17.1.2"
-  },
-  "eslintConfig": {
-    "extends": "./node_modules/standard/eslintrc.json"
   }
 }

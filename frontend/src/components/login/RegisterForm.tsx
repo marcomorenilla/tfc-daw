@@ -16,9 +16,48 @@ interface RegisterData {
   phone: string;
 }
 
+const initialRegisterError = {
+  name: false,
+  surname: false,
+  email: false,
+  password: false,
+  phone: false,
+};
+
 export default function RegisterForm({ onSwitch }: RegisterProps) {
   const apiUrl = useStore($apiRegisterUrl);
-  const [isErrored, setIsErrored] = useState(false);
+  const [error, setError] = useState({
+    nameError: { error: false, message: "" },
+    emailError: { error: false, message: "" },
+    surnameError: { error: false, message: "" },
+    passwordError: { error: false, message: "" },
+    phoneError: { error: false, message: "" },
+  });
+
+  const onRegister = async (credentials: RegisterData, apiUrl: string) => {
+    await handleRegister(credentials, apiUrl);
+  };
+
+  const validateFields = (credentials: RegisterData) => {
+    console.log(credentials);
+
+    const { name, surname, email, password, phone } = credentials;
+    const emptyRegex = /^·*$/;
+    const emailRegex = /^[\w\d/.]+@[\w\d/.]+\.(com|es|dev|org)$/;
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).{6,}$/;
+
+    if (!emptyRegex.test(name)) {
+      const { nameError } = error;
+      const newNameError = {
+        error: true,
+        message: "El nombre del usuario no puede estar vacío",
+      };
+      setError({ ...error, nameError: newNameError });
+    }
+    console.log("error", error);
+    console.log("empty name", emailRegex.test(name));
+  };
+
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("enviado", apiUrl);
@@ -36,14 +75,8 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
       password,
       phone,
     };
-    handleRegister(credentials, apiUrl)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    validateFields(credentials);
+    //onRegister(credentials, apiUrl);
     e.target.reset();
   };
   return (
@@ -60,11 +93,11 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
             type="text"
             name="name"
             id="name"
-            required
             placeholder="Tu nombre"
             className="border border-gray-200 rounded-xl p-3 w-full bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
           />
         </section>
+        {error.nameError.error && <span>{error.nameError.message}</span>}
         <section className="relative flex flex-col gap-2">
           <label
             htmlFor="surname"
@@ -75,7 +108,6 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
             type="text"
             name="surname"
             id="surname"
-            required
             placeholder="Tu apellido"
             className="border border-gray-200 rounded-xl p-3 w-full bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
           />
@@ -88,7 +120,6 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
             type="text"
             name="email"
             id="email"
-            required
             placeholder="ejemplo@email.com"
             className="border border-gray-200 rounded-xl p-3 w-full bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
           />
@@ -103,7 +134,6 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
             type="password"
             name="password"
             id="password"
-            required
             placeholder="••••••••"
             className="border border-gray-200 rounded-xl p-3 w-full bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400 transition"
           />
@@ -116,7 +146,6 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
             type="text"
             name="phone"
             id="phone"
-            required
             placeholder="+34 - 666 666 666"
             className="border border-gray-200 rounded-xl p-3 w-full bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
           />
@@ -150,13 +179,6 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
           </label>
         </section>
       </form>
-      {isErrored && (
-        <ErrorModal
-          setIsErrored={setIsErrored}
-          message="No se encuentra al usuario en el sistema, regístrate para obtener la
-              experiencia completa."
-        />
-      )}
     </>
   );
 }

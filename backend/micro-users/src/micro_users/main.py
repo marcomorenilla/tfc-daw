@@ -3,11 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from micro_users.api.v1 import auth
 from micro_users.db import Base, engine
 from micro_users.models import User
+from micro_users.middleware import HttpAuthMiddleware
 
 
 Base.metadata.create_all(bind=engine)
 
-origins = ["*"]
+origins = ["http://localhost:4321", "http://127.0.0.1:4321"]
 
 app = FastAPI(
     docs_url="/users/docs",
@@ -19,6 +20,7 @@ app = FastAPI(
 
 app.include_router(auth.router, prefix="/users/api/v1")
 
+app.add_middleware(HttpAuthMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,

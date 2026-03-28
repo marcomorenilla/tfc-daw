@@ -13,6 +13,21 @@ services:
     env_file:
       - .env
 
+  minio:
+    image: minio/minio
+    container_name: minio-storage
+    networks:
+      - tfc
+    expose:
+      - 9000
+    ports:
+      - "9001:9001" 
+    env_file:
+      - .env
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+
     
 
   users:
@@ -26,6 +41,19 @@ services:
       - tfc
     volumes:
       - ./micro-users:/app/micro-users
+  
+  micro-images:
+    container_name: micro-images
+    build: 
+      context: ./micro-images
+    expose:
+      - 3000
+    networks:
+      - tfc
+    depends_on:
+      - minio
+    env_file:
+      - .env
 
   gateway:
     image: nginx:alpine
@@ -41,6 +69,8 @@ services:
 
 volumes:
   postgres-data: {}
+  minio_data: {}
+
 
 
 networks:

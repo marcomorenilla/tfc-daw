@@ -3,21 +3,22 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --host=0.0.0.0",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/node": "^9.0.0",
+    "@astrojs/node": "^10.0.4",
     "@astrojs/react": "^4.0.0",
     "@nanostores/react": "^1.1.0",
     "@tailwindcss/vite": "^4.0.0",
-    "astro": "^5.0.0",
+    "astro": "^6.1.5",
     "nanostores": "^1.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwindcss": "^4.0.0"
+    "tailwindcss": "^4.0.0",
+    "unsplash-js": "^7.0.20"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",

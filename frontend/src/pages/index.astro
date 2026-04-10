@@ -1,5 +1,8 @@
 ---
+import IndexWrapper from "@/components/index/IndexWrapper";
 import IndexLayout from "@/layouts/IndexLayout.astro";
 ---
 
-<IndexLayout title="Inicio" />
+<IndexLayout title="Inicio">
+  <IndexWrapper client:load />
+</IndexLayout>

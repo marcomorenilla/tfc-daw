@@ -13,6 +13,7 @@ services:
     env_file:
       - .env
 
+
   minio:
     image: minio/minio
     container_name: minio-storage
@@ -28,8 +29,6 @@ services:
       - minio_data:/data
     command: server /data --console-address ":9001"
 
-    
-
   users:
     container_name: micro-users
     build: 
@@ -41,6 +40,19 @@ services:
       - tfc
     volumes:
       - ./micro-users:/app/micro-users
+  bikes:
+    container_name: micro-bikes
+    build: 
+      context: .
+      dockerfile: micro-bikes/Dockerfile
+    expose:
+      - 8000
+    networks:
+      - tfc
+    env_file:
+      - .env
+    volumes:
+      - ./micro-bikes:/app/micro-bikes  
   
   micro-images:
     container_name: micro-images
@@ -54,6 +66,7 @@ services:
       - minio
     env_file:
       - .env
+
 
   gateway:
     image: nginx:alpine
@@ -70,6 +83,10 @@ services:
 volumes:
   postgres-data: {}
   minio_data: {}
+  mongo-data: {}
+  mongo-config: {}
+
+
 
 
 

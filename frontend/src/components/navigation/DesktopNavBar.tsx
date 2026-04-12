@@ -13,8 +13,8 @@ export function DesktopNavBar() {
           <a href="/">
             <li>Inicio</li>
           </a>
-          <a href="/rating">
-            <li>Valoraciones</li>
+          <a href="/catalog">
+            <li>Catálogo</li>
           </a>
           <a href="/forum">
             <li>Foro</li>

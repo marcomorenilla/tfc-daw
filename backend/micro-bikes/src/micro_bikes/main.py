@@ -39,11 +39,13 @@ PyObjectId = Annotated[str, BeforeValidator(str)]
 
 class Bike(BaseModel):
     id: PyObjectId = Field(default_factory=ObjectId, alias="_id")
-    message: str = Field(...)
+    name: str = Field(...)
+    img: str = Field(...)
+    rate: int = Field(...)
+    posts: int = Field(...)
     model_config = ConfigDict(
         populate_by_name=True,
         arbitrary_types_allowed=True,
-        json_schema_extra={"example": {"message": "Hola mundo"}},
     )
 
 
@@ -58,10 +60,17 @@ db = client.bikes
 collection = db["bikes"]
 
 
-@router.get("/")
+@router.get("/", response_model=BikeCollection, tags=["Get All Bikes"])
 async def root():
-    print("mongo_uri", mongo_uri)
     return BikeCollection(bikes=await collection.find().to_list(1000))
+
+
+@router.get("/{bike_id}", response_model=Bike, tags=["Get Bike By Id"])
+async def get_bike(bike_id: str):
+    bike = await collection.find_one({"_id": ObjectId(bike_id)})
+    if bike is None:
+        raise HTTPException(status_code=404, detail="Bike not found")
+    return bike
 
 
 app.include_router(router)

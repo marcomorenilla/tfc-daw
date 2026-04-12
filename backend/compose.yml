@@ -40,6 +40,8 @@ services:
       - tfc
     volumes:
       - ./micro-users:/app/micro-users
+    depends_on:
+      - db
   bikes:
     container_name: micro-bikes
     build: 
@@ -83,13 +85,8 @@ services:
 volumes:
   postgres-data: {}
   minio_data: {}
-  mongo-data: {}
-  mongo-config: {}
-
-
-
-
-
+  
+  
 networks:
   tfc:
     driver: bridge

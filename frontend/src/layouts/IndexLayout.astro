@@ -11,7 +11,17 @@ const { title } = Astro.props;
   <NavLayout>
     <NavBar client:load />
   </NavLayout>
-  <main>
+  <main
+    class="min-h-screen bg-slate-50 py-16 px-4 sm:px-6 lg:px-8 font-sans antialiased">
+    <section class="text-center mb-16">
+      <h1
+        class="text-5xl md:text-6xl font-black text-slate-900 tracking-tight mb-4">
+        Nuestras <span class="text-blue-600">bicis</span>
+      </h1>
+      <p class="text-slate-500 text-lg max-w-2xl mx-auto">
+        Descubre las bicis mejor valoradas por nuestros clientes
+      </p>
+    </section>
     <slot />
   </main>
   <FooterLayout />

@@ -1,0 +1,47 @@
+---
+import { ForumTopic } from "@/components/forum/ForumTopic";
+import ForoLayout from "@/layouts/ForoLayout.astro";
+
+const initialTopics = [
+  {
+    id: "1",
+    title: "Mejor ruta para gravel en la Sierra de Guadarrama",
+    author: "CarlosGravel",
+    date: "12 Mar 2026",
+    replies: 14,
+    category: "Rutas",
+  },
+  {
+    id: "2",
+    title: "Problemas con el cambio electrónico Shimano Di2",
+    author: "MecanoBike",
+    date: "10 Mar 2026",
+    replies: 8,
+    category: "Mantenimiento",
+  },
+  {
+    id: "3",
+    title: "Review: Nueva Specialized Tarmac SL8",
+    author: "Admin_Pro",
+    date: "08 Mar 2026",
+    replies: 45,
+    category: "Reviews",
+  },
+  {
+    id: "4",
+    title: "¿Alguien para salir este domingo por la Casa de Campo?",
+    author: "BikerMadrid",
+    date: "Hoy, 10:30",
+    replies: 3,
+    category: "Quedadas",
+  },
+];
+---
+
+<ForoLayout>
+  {
+    initialTopics.map((topic: any, index: number) => (
+      <ForumTopic key={index} topic={topic} client:load />
+    ))
+  }
+</ForoLayout>

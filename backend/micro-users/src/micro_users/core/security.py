@@ -9,10 +9,10 @@ from sqlalchemy.orm import Session
 
 from datetime import datetime, timedelta, timezone
 
-from .oauth_schema import OAuth2PasswordBearerCookie
+from fastapi.security import OAuth2PasswordBearer
 
 
-oauth2_scheme = OAuth2PasswordBearerCookie(tokenUrl="api/v1/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/api/v1/token")
 
 
 def create_session_token(data: dict):

@@ -1,0 +1,28 @@
+---
+import NavBar from "@/components/navigation/NavBar";
+import BaseLayout from "./BaseLayout.astro";
+import NavLayout from "./NavLayout.astro";
+import FooterLayout from "./FooterLayout.astro";
+
+const { title } = Astro.props;
+---
+
+<BaseLayout title={title}>
+  <NavLayout>
+    <NavBar client:load />
+  </NavLayout>
+  <main
+    class="min-h-screen bg-slate-50 py-16 px-4 sm:px-6 lg:px-8 font-sans antialiased">
+    <section class="text-center mb-16">
+      <h1
+        class="text-5xl md:text-6xl font-black text-slate-900 tracking-tight mb-4">
+        Tu <span class="text-blue-600">perfil</span>
+      </h1>
+      <p class="text-slate-500 text-lg max-w-2xl mx-auto">
+        Gestiona tu perfil de usuario
+      </p>
+    </section>
+    <slot />
+  </main>
+  <FooterLayout />
+</BaseLayout>

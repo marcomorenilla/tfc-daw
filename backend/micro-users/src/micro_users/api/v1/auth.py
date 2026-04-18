@@ -100,7 +100,7 @@ async def login(
         httponly=True,
         secure=False,  # TODO: Cambiar a true cuando añada https
         samesite="lax",
-        max_age=3600,
+        max_age=86400,
     )
 
     return {"access_token": access_token, "token_type": "bearer", "response": response}
@@ -165,3 +165,9 @@ async def delete_user_route(
     db.commit()
 
     return user
+
+
+@router.post("/logout", tags=["Logout"])
+async def logout(response: Response):
+    response.delete_cookie("tfc_access_token")
+    return {"message": "Logout successful"}

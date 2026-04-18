@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { $user } from "@/store/authStore";
+import { useStore } from "@nanostores/react";
 
 export function ProfileNav({}: any) {
+  const user = useStore($user);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const refDialog = useRef<HTMLDialogElement | null>(null);
   useEffect(() => {
@@ -11,12 +14,30 @@ export function ProfileNav({}: any) {
       refDialog.current?.close();
     }
   }, [isDialogOpen]);
-  const handleClick = () => {
-    setIsDialogOpen(!isDialogOpen);
+  const handleOpen = () => {
+    setIsDialogOpen(true);
+  };
+  const handleClose = () => {
+    setIsDialogOpen(false);
+  };
+  console.log("usuario nav", $user);
+  const handleLogOut = () => {
+    fetch("http://localhost:8200/users/api/v1/logout", {
+      method: "POST",
+      credentials: "include",
+    }).then((res) => {
+      $user.set(null);
+      setIsDialogOpen(false);
+      location.href = "/login";
+    });
+  };
+
+  const handleLoginRedirect = () => {
+    location.href = "/login";
   };
   return (
     <>
-      <section onClick={handleClick} className="relative">
+      <section onClick={handleOpen} className="relative">
         <svg
           width="50px"
           height="50px"
@@ -44,28 +65,38 @@ export function ProfileNav({}: any) {
       </section>
       <dialog
         ref={refDialog}
-        onClose={handleClick}
+        onClose={handleClose}
         className="animate-entry fixed max-h-none max-w-none h-full w-full bg-transparent backdrop-blur-lg">
         <div className="bg-teal-600/30 w-full h-full flex justify-end ">
           <article className="h-screen bg-white/90 w-auto py-3">
             <button
-              onClick={handleClick}
+              onClick={handleClose}
               className="font-bold mx-5 bg-teal-600 size-10 rounded-xl hover:bg-teal-700 cursor-pointer justify-center items-center flex  text-white text-lg ">
               x
             </button>
             <section className="flex mt-10 flex-col">
-              <a
-                onClick={handleClick}
-                className="p-3 border-b border-t hover:bg-teal-600 hover:text-white border-gray-800/30"
-                href="/profile">
-                Perfil
-              </a>
-              <a
-                onClick={handleClick}
-                className="p-3 border-b hover:bg-teal-600 hover:text-white border-gray-800/30"
-                href="/logout">
-                Cerrar sesión
-              </a>
+              {user && (
+                <a
+                  onClick={handleClose}
+                  className="p-3 border-b border-t text-lg text-teal-600 hover:bg-teal-600 hover:text-white border-gray-800/30"
+                  href="/profile">
+                  Perfil
+                </a>
+              )}
+              {user && (
+                <button
+                  onClick={handleLogOut}
+                  className="p-3 border-b hover:bg-teal-600  text-lg text-teal-600 hover:text-white border-gray-800/30">
+                  Cerrar sesión
+                </button>
+              )}
+              {!user && (
+                <button
+                  onClick={handleLoginRedirect}
+                  className="p-3 border-b hover:bg-teal-600  text-lg text-teal-600 hover:text-white border-gray-800/30">
+                  Iniciar Sesión
+                </button>
+              )}
             </section>
           </article>
         </div>

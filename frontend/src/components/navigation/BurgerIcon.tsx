@@ -4,7 +4,7 @@ interface BurgerProps {
 }
 export function BurgerIcon({ handleClick }: BurgerProps) {
   return (
-    <section className="lg:hidden hover:scale-[1.2]  cursor-pointer m-0 p-3 fixed animate-opacity top-0 left-0">
+    <section className="lg:hidden absolute animate-opacity ">
       <svg
         onClick={handleClick}
         width="80px"

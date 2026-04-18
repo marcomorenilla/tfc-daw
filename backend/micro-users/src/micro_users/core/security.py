@@ -1,14 +1,8 @@
 import jwt
-from typing import Annotated
 
-from fastapi import Depends, HTTPException
-
+from fastapi import Request, HTTPException
 from .config import settings
-from micro_users.db.session import get_db
-from sqlalchemy.orm import Session
-
 from datetime import datetime, timedelta, timezone
-
 from fastapi.security import OAuth2PasswordBearer
 
 
@@ -33,28 +27,34 @@ def create_session_token(data: dict):
     return encoded_jwt
 
 
-def get_current_user(
-    token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)
-):
+def get_current_user(request: Request):
     """
     Extrae al usuario  del jwt y lo busca en bbdd
     Uso: Acceso a rutas protegidas
     """
+    token = request.cookies.get("tfc_access_token")
+    if token is None:
+        return HTTPException(status_code=401, detail="No token provided")
 
-    payload = decode_session_token(token)
-    if payload is None:
+    try:
+        payload = decode_session_token(token)
+        if payload is None:
+            return HTTPException(status_code=401, detail="Invalid token")
+
+        token_data = {
+            "id": payload.get("sub"),
+            "name": payload.get("name"),
+            "email": payload.get("email"),
+            "admin": payload.get("admin"),
+        }
+
+        if token_data is None:
+            return HTTPException(status_code=400, detail="No existe el usuario")
+        return token_data
+    except jwt.ExpiredSignatureError:
         return HTTPException(status_code=401, detail="Invalid token")
-
-    token_data = {
-        "id": payload.get("sub"),
-        "name": payload.get("name"),
-        "email": payload.get("email"),
-        "admin": payload.get("admin"),
-    }
-
-    if token_data is None:
-        return HTTPException(status_code=400, detail="No existe el usuario")
-    return token_data
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
 
 def decode_session_token(token: str):

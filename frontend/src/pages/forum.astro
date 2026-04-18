@@ -1,6 +1,7 @@
 ---
-import { ForumTopic } from "@/components/forum/ForumTopic";
+import { ForumContainer } from "@/components/forum/ForumContainer";
 import ForoLayout from "@/layouts/ForoLayout.astro";
+import { ProtectedRoute } from "@/components/login/ProtectedRoute";
 
 const initialTopics = [
   {
@@ -39,9 +40,7 @@ const initialTopics = [
 ---
 
 <ForoLayout>
-  {
-    initialTopics.map((topic: any, index: number) => (
-      <ForumTopic key={index} topic={topic} client:load />
-    ))
-  }
+  <ProtectedRoute client:only="react">
+    <ForumContainer initialTopics={initialTopics} client:load />
+  </ProtectedRoute>
 </ForoLayout>

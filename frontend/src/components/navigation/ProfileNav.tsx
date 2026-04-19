@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { $user } from "@/store/authStore";
 import { useStore } from "@nanostores/react";
+import { navigate } from "astro:transitions/client";
 
 export function ProfileNav({}: any) {
-  const user = useStore($user);
+  const user: any = useStore($user);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const refDialog = useRef<HTMLDialogElement | null>(null);
   useEffect(() => {
     if (isDialogOpen) {
-      console.log("mostrando dialog");
       refDialog.current?.showModal();
     } else {
       refDialog.current?.close();
@@ -20,7 +20,6 @@ export function ProfileNav({}: any) {
   const handleClose = () => {
     setIsDialogOpen(false);
   };
-  console.log("usuario nav", $user);
   const handleLogOut = () => {
     fetch("http://localhost:8200/users/api/v1/logout", {
       method: "POST",
@@ -28,12 +27,13 @@ export function ProfileNav({}: any) {
     }).then((res) => {
       $user.set(null);
       setIsDialogOpen(false);
-      location.href = "/login";
+      navigate("/login");
     });
   };
 
   const handleLoginRedirect = () => {
-    location.href = "/login";
+    setIsDialogOpen(false);
+    navigate("/login");
   };
   return (
     <>
@@ -75,7 +75,7 @@ export function ProfileNav({}: any) {
               x
             </button>
             <section className="flex mt-10 flex-col">
-              {user && (
+              {user?.id && (
                 <a
                   onClick={handleClose}
                   className="p-3 border-b border-t text-lg text-teal-600 hover:bg-teal-600 hover:text-white border-gray-800/30"
@@ -83,14 +83,14 @@ export function ProfileNav({}: any) {
                   Perfil
                 </a>
               )}
-              {user && (
+              {user?.id && (
                 <button
                   onClick={handleLogOut}
                   className="p-3 border-b hover:bg-teal-600  text-lg text-teal-600 hover:text-white border-gray-800/30">
                   Cerrar sesión
                 </button>
               )}
-              {!user && (
+              {!user?.id && (
                 <button
                   onClick={handleLoginRedirect}
                   className="p-3 border-b hover:bg-teal-600  text-lg text-teal-600 hover:text-white border-gray-800/30">

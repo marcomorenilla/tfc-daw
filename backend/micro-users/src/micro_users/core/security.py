@@ -33,11 +33,13 @@ def get_current_user(request: Request):
     Uso: Acceso a rutas protegidas
     """
     token = request.cookies.get("tfc_access_token")
+    print(f"DEBUG: token: {token}")
     if token is None:
         return HTTPException(status_code=401, detail="No token provided")
 
     try:
         payload = decode_session_token(token)
+        print(f"DEBUG: payload: {payload}")
         if payload is None:
             return HTTPException(status_code=401, detail="Invalid token")
 
@@ -45,6 +47,8 @@ def get_current_user(request: Request):
             "id": payload.get("sub"),
             "name": payload.get("name"),
             "email": payload.get("email"),
+            "phone": payload.get("phone"),
+            "disabled": payload.get("disabled"),
             "admin": payload.get("admin"),
         }
 

@@ -89,6 +89,8 @@ async def login(
     jwt_payload = {
         "sub": str(user.id),
         "email": user.email,
+        "phone": user.phone,
+        "disabled": user.disabled,
         "admin": user.is_superuser,
         "name": user.name,
     }
@@ -103,7 +105,11 @@ async def login(
         max_age=86400,
     )
 
-    return {"access_token": access_token, "token_type": "bearer", "response": response}
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": user,
+    }
 
 
 @router.post("/register", response_model=UserSchema, tags=["Register"], status_code=201)

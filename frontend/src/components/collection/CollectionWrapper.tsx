@@ -1,12 +1,27 @@
 import { useEffect, useMemo, useState } from "react";
 import BikeGrid from "../bikes/BikeGrid";
 import { CollectionFilter } from "./CollectionFilter";
-
-export default function CollectionWrapper({ bikes: initialBikes }: any) {
+import { Loader } from "../shared/Loader";
+import { $bikes, $isLoading, $errorMsg, getBikes } from "@/store/bikesStore";
+import { useStore } from "@nanostores/react";
+import { ErrorMsg } from "../shared/ErrorMsg";
+export default function CollectionWrapper() {
   const [isFiltered, setIsFiltered] = useState(false);
   const [isReverse, setIsReverse] = useState(false);
   const [filterText, setFilterText] = useState("");
   const [sortCriteria, setSortCriteria] = useState("");
+
+  const initialBikes: any = useStore($bikes) || [];
+  const isLoading: boolean = useStore($isLoading);
+  const errorMsg = useStore($errorMsg);
+
+  const asyncBikes = () => {
+    getBikes();
+  };
+
+  useEffect(() => {
+    errorMsg ? asyncBikes() : null;
+  }, []);
 
   useEffect(() => {
     if (sortCriteria == "unfiltered") setIsFiltered(false);
@@ -62,7 +77,11 @@ export default function CollectionWrapper({ bikes: initialBikes }: any) {
         onSelectionChange={handleSelectionChange}
         onReverseClick={handleReverse}
       />
-      <BikeGrid bikes={displayedBikes} />
+      {isLoading && !errorMsg && <Loader />}
+      {!isLoading && !errorMsg && <BikeGrid bikes={displayedBikes} />}
+      {errorMsg && (
+        <ErrorMsg>Ups! Parece que algo no está funcionando</ErrorMsg>
+      )}
     </>
   );
 }

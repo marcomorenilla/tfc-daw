@@ -1,11 +1,8 @@
 ---
 import CollectionWrapper from "@/components/collection/CollectionWrapper";
 import CatalogLayout from "@/layouts/CatalogLayout.astro";
-import { getBikes } from "@/services/bikesApi";
-
-const bikes = await getBikes();
 ---
 
 <CatalogLayout>
-  <CollectionWrapper bikes={bikes} client:load />
+  <CollectionWrapper client:load />
 </CatalogLayout>

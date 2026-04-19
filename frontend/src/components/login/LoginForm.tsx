@@ -2,7 +2,8 @@ import { useState } from "react";
 import { handleLogin } from "../../services/loginHandler";
 import { ErrorModal } from "./ErrorModal.tsx";
 import { useStore } from "@nanostores/react";
-import { $apiLoginUrl } from "@/store/authStore.ts";
+import { $apiLoginUrl, $user } from "@/store/authStore.ts";
+import { navigate } from "astro:transitions/client";
 
 interface LoginProps {
   readonly onSwitch: () => void;
@@ -29,7 +30,8 @@ export default function LoginForm({ onSwitch }: LoginProps) {
       const result = await handleLogin(credentials, apiUrl);
 
       if (result.access_token) {
-        location.href = "/";
+        $user.set(result.user);
+        navigate("/");
       } else {
         throw new Error("No ha llegado un access_token válido");
       }

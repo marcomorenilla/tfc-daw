@@ -41,6 +41,6 @@ const initialTopics = [
 
 <ForoLayout>
   <ProtectedRoute client:only="react">
-    <ForumContainer initialTopics={initialTopics} client:load />
+    <ForumContainer initialTopics={initialTopics} client:only="react" />
   </ProtectedRoute>
 </ForoLayout>

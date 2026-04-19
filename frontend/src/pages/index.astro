@@ -1,15 +1,8 @@
 ---
-import BikeGrid from "@/components/bikes/BikeGrid";
+import { IndexWrapper } from "@/components/index/IndexWrapper";
 import IndexLayout from "@/layouts/IndexLayout.astro";
-import { getBikes } from "@/services/bikesApi";
-
-const bikes = await getBikes();
-
-const sortedIndexBikes = bikes
-  .sort((a: any, b: any) => b.rate - a.rate)
-  .slice(0, 6);
 ---
 
 <IndexLayout title="Inicio">
-  <BikeGrid bikes={sortedIndexBikes} client:load />
+  <IndexWrapper client:load />
 </IndexLayout>

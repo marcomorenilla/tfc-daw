@@ -1,7 +1,4 @@
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
-from fastapi import Request, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-from typing import Optional
 
 """
 Esquemas de la API
@@ -38,6 +35,7 @@ class UserSchema(User):
 class Token(BaseModel):
     access_token: str
     token_type: str
+    user: UserSchema
 
 
 class TokenData(BaseModel):
@@ -45,4 +43,6 @@ class TokenData(BaseModel):
     name: str | None = None
     email: str | None = None
     admin: bool | None = None
+    phone: str | None = None
+    disabled: bool | None = None
     model_config = ConfigDict(from_attributes=True)

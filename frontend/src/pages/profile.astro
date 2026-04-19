@@ -5,7 +5,5 @@ import { ProtectedRoute } from "@/components/login/ProtectedRoute";
 ---
 
 <ProfileLayout title="Perfil">
-  <ProtectedRoute client:only="react">
-    <ProfileContainer client:only="react" />
-  </ProtectedRoute>
+  <ProfileContainer client:only="react" />
 </ProfileLayout>

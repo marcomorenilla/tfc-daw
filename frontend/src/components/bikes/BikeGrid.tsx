@@ -1,4 +1,3 @@
-import { StarIcon } from "../shared/StarIcon";
 import BikeCard from "../shared/BikeCard";
 
 export default function BikeGrid({ bikes }: any) {

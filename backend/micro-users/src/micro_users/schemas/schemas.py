@@ -14,11 +14,11 @@ class User(BaseModel):
     is_superuser: bool = False
 
 
-class UserCreate(User):
-    password: str
-
-
 class UserUpdate(User):
+    password: str | None = None
+
+
+class UserCreate(User):
     password: str
 
 
@@ -41,6 +41,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     id: str | None = None
     name: str | None = None
+    surname: str | None = None
     email: str | None = None
     admin: bool | None = None
     phone: str | None = None

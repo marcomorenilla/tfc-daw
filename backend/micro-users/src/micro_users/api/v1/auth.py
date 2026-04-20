@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, Response
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
 
-from micro_users.schemas import UserSchema, Token, TokenData, UserCreate, UserInDB
+from micro_users.schemas import UserSchema, Token, TokenData, UserCreate, UserUpdate
 from micro_users.db import get_db
 from micro_users.models import User
 from micro_users.services import (
@@ -88,6 +88,7 @@ async def login(
         )
     jwt_payload = {
         "sub": str(user.id),
+        "surname": user.surname,
         "email": user.email,
         "phone": user.phone,
         "disabled": user.disabled,
@@ -123,10 +124,11 @@ async def register(user_in: UserCreate, db: Session = Depends(get_db)):
     return create_user(user_in, db)
 
 
-@router.put("/{user_id}", response_model=UserInDB, tags=["Update user"])
+@router.put("/{user_id}", response_model=Token, tags=["Update user"])
 async def update_user_route(
+    response: Response,
     user_id: int,
-    user_in: UserCreate,
+    user_in: UserUpdate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -136,13 +138,34 @@ async def update_user_route(
     @param db: Instancia de la BBDD
     @param user_id: Id del usuario a modificar
     @param user_in: Datos del usuario en modelo UserCreate
-    @return: Usuario modificado
+    @return:  Token
     """
-    if not current_user.get("admin"):
-        raise HTTPException(
-            status_code=403, detail="No tienes permiso para ver esta ruta"
-        )
-    return update_user(user_id, user_in, db)
+    user = update_user(user_id, user_in, db)
+
+    jwt_payload = {
+        "sub": str(user.id),
+        "surname": user.surname,
+        "email": user.email,
+        "phone": user.phone,
+        "disabled": user.disabled,
+        "admin": user.is_superuser,
+        "name": user.name,
+    }
+    access_token = create_session_token(jwt_payload)
+
+    response.set_cookie(
+        key="tfc_access_token",
+        value=access_token,
+        httponly=True,
+        secure=False,  # TODO: Cambiar a true cuando añada https
+        samesite="lax",
+        max_age=86400,
+    )
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": user,
+    }
 
 
 @router.delete("/{user_id}", response_model=UserSchema, tags=["Delete user"])

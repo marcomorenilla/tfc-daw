@@ -46,6 +46,7 @@ def get_current_user(request: Request):
         token_data = {
             "id": payload.get("sub"),
             "name": payload.get("name"),
+            "surname": payload.get("surname"),
             "email": payload.get("email"),
             "phone": payload.get("phone"),
             "disabled": payload.get("disabled"),

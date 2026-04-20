@@ -13,22 +13,6 @@ services:
     env_file:
       - .env
 
-
-  minio:
-    image: minio/minio
-    container_name: minio-storage
-    networks:
-      - tfc
-    expose:
-      - 9000
-    ports:
-      - "9001:9001" 
-    env_file:
-      - .env
-    volumes:
-      - minio_data:/data
-    command: server /data --console-address ":9001"
-
   users:
     container_name: micro-users
     build: 
@@ -64,8 +48,6 @@ services:
       - 3000
     networks:
       - tfc
-    depends_on:
-      - minio
     env_file:
       - .env
 
@@ -81,6 +63,8 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - users
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   postgres-data: {}

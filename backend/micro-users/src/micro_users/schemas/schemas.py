@@ -10,7 +10,7 @@ class User(BaseModel):
     name: str = Field(..., min_length=3, max_length=50)
     surname: str = Field(..., min_length=3, max_length=100)
     phone: str = Field(..., min_length=1, max_length=10)
-    disabled: bool = True
+    disabled: bool = False
     is_superuser: bool = False
 
 

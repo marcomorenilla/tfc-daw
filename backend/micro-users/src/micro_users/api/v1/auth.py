@@ -54,16 +54,16 @@ async def get_user_by_id_route(
 
 @router.post("/validate", response_model=TokenData, tags=["Validate user"])
 async def validate_user(
-    get_current_user: User = Depends(get_current_user),
+    user: User = Depends(get_current_user),
 ):
     """
     Valida el token de un usuario que pregunta a esta ruta
     @param get_current_user: Toke con la información del usuario
     @return: TokenData con la información del usuario
     """
-    if not get_current_user:
+    if not user:
         raise HTTPException(status_code=401, detail="Invalid token")
-    return get_current_user
+    return user
 
 
 @router.post("/token", response_model=Token, tags=["Login"])
@@ -133,6 +133,7 @@ async def update_user_route(
     db: Session = Depends(get_db),
 ):
     """
+
     Modifica al usuario de la BBDD
     @param current_user: TokenData con la información del usuario
     @param db: Instancia de la BBDD
@@ -170,6 +171,7 @@ async def update_user_route(
 
 @router.delete("/{user_id}", response_model=UserSchema, tags=["Delete user"])
 async def delete_user_route(
+    response: Response,
     user_id: int,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -181,10 +183,7 @@ async def delete_user_route(
     @param user_id: Id del usuario a eliminar
     @return: Usuario eliminado
     """
-    if not current_user.get("admin"):
-        raise HTTPException(
-            status_code=403, detail="No tienes permiso para ver esta ruta"
-        )
+
     user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
@@ -193,6 +192,7 @@ async def delete_user_route(
     db.delete(user)
     db.commit()
 
+    response.delete_cookie("tfc_access_token")
     return user
 
 

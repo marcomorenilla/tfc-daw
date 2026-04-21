@@ -15,13 +15,16 @@ export function IndexWrapper() {
 
   const asyncBikes = (bikes: any) => {
     getBikes();
-    bikes ? bikes.sort((a: any, b: any) => b.rate - a.rate).slice(0, 6) : null;
   };
 
   return (
     <>
       {isLoading && !errorMsg && <Loader />}
-      {!isLoading && !errorMsg && <BikeGrid bikes={bikes} />}
+      {!isLoading && !errorMsg && (
+        <BikeGrid
+          bikes={bikes.sort((a: any, b: any) => b.rate - a.rate).slice(0, 6)}
+        />
+      )}
       {errorMsg && <ErrorMsg>Ups! Algo no fue como debería</ErrorMsg>}
     </>
   );

@@ -16,11 +16,13 @@ export default function CollectionWrapper() {
   const errorMsg = useStore($errorMsg);
 
   const asyncBikes = () => {
+    console.log("async");
     getBikes();
   };
 
   useEffect(() => {
-    errorMsg ? asyncBikes() : null;
+    console.log("render");
+    asyncBikes();
   }, []);
 
   useEffect(() => {

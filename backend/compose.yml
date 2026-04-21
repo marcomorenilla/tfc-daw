@@ -38,18 +38,31 @@ services:
     env_file:
       - .env
     volumes:
-      - ./micro-bikes:/app/micro-bikes  
-  
-  micro-images:
-    container_name: micro-images
+      - ./micro-bikes:/app/micro-bikes 
+  forums:
+    container_name: micro-forum
     build: 
-      context: ./micro-images
+      context: .
+      dockerfile: micro-forum/Dockerfile
     expose:
-      - 3000
+      - 8000
     networks:
       - tfc
     env_file:
       - .env
+    volumes:
+      - ./micro-forum:/app/micro-forum   
+  
+  #micro-images:
+  #  container_name: micro-images
+  #  build: 
+  #    context: ./micro-images
+  #  expose:
+  #    - 3000
+  #  networks:
+  #    - tfc
+  #  env_file:
+  #    - .env
 
 
   gateway:

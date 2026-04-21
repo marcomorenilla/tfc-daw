@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { ErrorModal } from "./ErrorModal.tsx";
+import React, { useEffect, useRef, useState } from "react";
 import { useStore } from "@nanostores/react";
 import { $apiRegisterUrl } from "@/store/authStore.ts";
 import { handleRegister } from "@/services/registerHandler.ts";
 import { ErrorSpan } from "./ErrorSpan.tsx";
+import { SecondaryButton } from "../shared/SecondaryButton.tsx";
 
 interface RegisterProps {
   readonly onSwitch: () => void;
@@ -15,7 +15,17 @@ interface RegisterData {
   email: string;
   password: string;
   phone: string;
+  disabled: boolean;
+  is_superuser: boolean;
 }
+
+const initialFormData = {
+  name: "",
+  surname: "",
+  email: "",
+  password: "",
+  phone: "",
+};
 
 const initialRegisterError = {
   nameError: { error: false, message: "" },
@@ -28,64 +38,94 @@ const initialRegisterError = {
 export default function RegisterForm({ onSwitch }: RegisterProps) {
   const apiUrl = useStore($apiRegisterUrl);
   const [error, setError] = useState(initialRegisterError);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [formData, setFormData] = useState<any>(initialFormData);
+  const [isErrored, setIsErrored] = useState(false);
+
+  useEffect(() => {
+    if (isDialogOpen) {
+      dialogRef.current?.showModal();
+    } else {
+      dialogRef.current?.close();
+    }
+  }, [isDialogOpen]);
 
   const onRegister = async (credentials: RegisterData, apiUrl: string) => {
-    await handleRegister(credentials, apiUrl);
+    try {
+      await handleRegister(credentials, apiUrl);
+      onSwitch();
+    } catch (err: any) {
+      setErrorMessage(err.message);
+      setIsDialogOpen(true);
+      console.log(err);
+    }
   };
 
-  const validateFields = (credentials: RegisterData) => {
-    const { name, surname, email, password, phone } = credentials;
-    let newErrors = { ...error };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    validateSingleField(name, value);
+  };
 
-    if (!name.trim()) {
-      newErrors.nameError = {
-        error: true,
-        message: "El nombre no puede estar vacío",
-      };
-    } else {
-      newErrors.nameError = { error: false, message: "" };
+  const validateSingleField = (fieldName: string, value: string) => {
+    let newError = { error: false, message: "" };
+    let isErrored = false;
+
+    switch (fieldName) {
+      case "name":
+        if (!value.trim()) {
+          newError = { error: true, message: "El nombre no puede estar vacío" };
+          isErrored = true;
+        }
+        break;
+      case "surname":
+        if (!value.trim()) {
+          newError = {
+            error: true,
+            message: "El apellido no puede estar vacío",
+          };
+          isErrored = true;
+        }
+        break;
+      case "password":
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).{6,}$/;
+        if (!passwordRegex.test(value)) {
+          newError = {
+            error: true,
+            message:
+              "La contraseña debe tener mayúsculas minúsculas, números y caracteres especiales. Mínimo 6 caracteres",
+          };
+          isErrored = true;
+        }
+        break;
+      case "phone":
+        const phoneRegex = /^\+?(\d[\s-]?){7,15}\d$/;
+        if (!phoneRegex.test(value)) {
+          newError = { error: true, message: "Número con formato incorrecto" };
+          isErrored = true;
+        }
+        break;
+      case "email":
+        const emailRegex = /^[\w\d/.]+@[\w\d/.]+\.(com|es|dev|org)$/;
+        if (!emailRegex.test(value)) {
+          newError = {
+            error: true,
+            message:
+              "Email con formato incorrecto solamente se aceptan .com | .es | .dev | .org",
+          };
+          isErrored = true;
+        }
+        break;
     }
 
-    if (!surname.trim()) {
-      newErrors.surnameError = {
-        error: true,
-        message: "El apellido no puede estar vacío",
-      };
-    } else {
-      newErrors.surnameError = { error: false, message: "" };
-    }
+    setIsErrored(isErrored);
 
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).{6,}$/;
-    if (!passwordRegex.test(password)) {
-      newErrors.passwordError = {
-        error: true,
-        message: "Contraseña demasiado débil",
-      };
-    } else {
-      newErrors.passwordError = { error: false, message: "" };
-    }
-
-    const phoneRegex = /^\+?(\d[\s-]?){7,15}\d$/;
-    if (!phoneRegex.test(phone)) {
-      newErrors.phoneError = {
-        error: true,
-        message: "Número con formato incorrecto",
-      };
-    } else {
-      newErrors.phoneError = { error: false, message: "" };
-    }
-
-    const emailRegex = /^[\w\d/.]+@[\w\d/.]+\.(com|es|dev|org)$/;
-    if (!emailRegex.test(email)) {
-      newErrors.emailError = {
-        error: true,
-        message: "Email con formato incorrecto",
-      };
-    } else {
-      newErrors.emailError = { error: false, message: "" };
-    }
-
-    setError(newErrors);
+    setError((prev) => ({
+      ...prev,
+      [`${fieldName}Error`]: newError,
+    }));
   };
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -104,10 +144,14 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
       email,
       password,
       phone,
+      disabled: false,
+      is_superuser: false,
     };
-    validateFields(credentials);
-    onRegister(credentials, apiUrl);
-    e.target.reset();
+    console.log("password:", password);
+    if (!isErrored) {
+      onRegister(credentials, apiUrl);
+      e.target.reset();
+    }
   };
   return (
     <>
@@ -122,6 +166,8 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
           <input
             type="text"
             name="name"
+            onChange={handleChange}
+            value={formData.name}
             id="name"
             placeholder="Tu nombre"
             className="border border-gray-200 rounded-xl p-3 w-full bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
@@ -138,6 +184,9 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
           </label>
           <input
             type="text"
+            onChange={handleChange}
+            value={formData.surname}
+            required
             name="surname"
             id="surname"
             placeholder="Tu apellido"
@@ -153,6 +202,9 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
           </label>
           <input
             type="text"
+            onChange={handleChange}
+            value={formData.email}
+            required
             name="email"
             id="email"
             placeholder="ejemplo@email.com"
@@ -170,6 +222,9 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
           </label>
           <input
             type="password"
+            onChange={handleChange}
+            value={formData.password}
+            required
             name="password"
             id="password"
             placeholder="••••••••"
@@ -185,6 +240,9 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
           </label>
           <input
             type="text"
+            onChange={handleChange}
+            value={formData.phone}
+            required
             name="phone"
             id="phone"
             placeholder="+34 - 666 666 666"
@@ -194,6 +252,18 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
         {error.phoneError.error && (
           <ErrorSpan>{error.phoneError.message}</ErrorSpan>
         )}
+        <section className="flex items-center justify-start gap-2">
+          <input
+            type="checkbox"
+            name="terms"
+            id="terms"
+            required
+            className="border border-gray-200 rounded-xl p-3  bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
+          />
+          <label htmlFor="terms" className="font-mediutext-sm text-gray-500">
+            Acepto los términos y condiciones
+          </label>
+        </section>
 
         <section className="flex">
           <button
@@ -209,20 +279,20 @@ export default function RegisterForm({ onSwitch }: RegisterProps) {
             Volver al inicio de sesión
           </button>
         </section>
-
-        <section className="flex items-center justify-start gap-2">
-          <input
-            type="checkbox"
-            name="terms"
-            id="terms"
-            required
-            className="border border-gray-200 rounded-xl p-3  bg-white outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
-          />
-          <label htmlFor="terms" className="font-mediutext-sm text-gray-500">
-            Acepto los términos y condiciones
-          </label>
-        </section>
       </form>
+      <dialog
+        ref={dialogRef}
+        onClose={() => setIsDialogOpen(false)}
+        className="max-w-none max-h-none  bg-transparent backdrop-blur-lg h-full w-full fixed inset-0 ">
+        <div className="animate-opacity  bg-red-600/50 h-full w-full flex justify-center border border-red items-center">
+          <div className="bg-white rounded-xl border-2 border-red-600 flex flex-col items-center justify-center gap-4 p-3">
+            <h2 className="text-xl text-red-600 font-bold">{errorMessage} </h2>
+            <SecondaryButton onClick={() => setIsDialogOpen(false)}>
+              Aceptar
+            </SecondaryButton>
+          </div>
+        </div>
+      </dialog>
     </>
   );
 }

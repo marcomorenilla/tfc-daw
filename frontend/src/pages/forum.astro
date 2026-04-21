@@ -2,45 +2,10 @@
 import { ForumContainer } from "@/components/forum/ForumContainer";
 import ForoLayout from "@/layouts/ForoLayout.astro";
 import { ProtectedRoute } from "@/components/login/ProtectedRoute";
-
-const initialTopics = [
-  {
-    id: "1",
-    title: "Mejor ruta para gravel en la Sierra de Guadarrama",
-    author: "CarlosGravel",
-    date: "12 Mar 2026",
-    replies: 14,
-    category: "Rutas",
-  },
-  {
-    id: "2",
-    title: "Problemas con el cambio electrónico Shimano Di2",
-    author: "MecanoBike",
-    date: "10 Mar 2026",
-    replies: 8,
-    category: "Mantenimiento",
-  },
-  {
-    id: "3",
-    title: "Review: Nueva Specialized Tarmac SL8",
-    author: "Admin_Pro",
-    date: "08 Mar 2026",
-    replies: 45,
-    category: "Reviews",
-  },
-  {
-    id: "4",
-    title: "¿Alguien para salir este domingo por la Casa de Campo?",
-    author: "BikerMadrid",
-    date: "Hoy, 10:30",
-    replies: 3,
-    category: "Quedadas",
-  },
-];
 ---
 
 <ForoLayout>
   <ProtectedRoute client:only="react">
-    <ForumContainer initialTopics={initialTopics} client:only="react" />
+    <ForumContainer client:only="react" />
   </ProtectedRoute>
 </ForoLayout>

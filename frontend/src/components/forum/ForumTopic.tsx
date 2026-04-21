@@ -1,52 +1,127 @@
-export function ForumTopic({ topic }: any) {
-  const { category, date, title, author, replies } = topic;
+import { useEffect, useRef, useState } from "react";
+import { ForumMessage } from "./ForumMessage";
+import { MainButton } from "../shared/MainButton";
+import { $forums } from "@/store/forumStore";
+import { useStore } from "@nanostores/react";
+import { $user } from "@/store/authStore";
+
+export function ForumTopic({ forum, onClick, onSubmit }: any) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const user: any = useStore($user);
+
+  useEffect(() => {
+    if (isDialogOpen) {
+      dialogRef.current?.showModal();
+    } else {
+      dialogRef.current?.close();
+    }
+  }, [isDialogOpen]);
+
+  const { topic, _id, messages }: any = forum;
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+
+    const data = new FormData(e.target);
+    const message = data.get("message");
+
+    const payload = {
+      user_id: user.id,
+      user_name: user.name,
+      message: message,
+    };
+    console.log(payload);
+
+    onSubmit(payload, _id);
+
+    handleClose();
+  };
+
   const handleClick = () => {
     console.log("clicked");
+    onClick();
+  };
+
+  const handleClose = () => {
+    setIsDialogOpen(false);
+  };
+
+  const handleOpen = () => {
+    setIsDialogOpen(true);
   };
 
   return (
-    <article
-      onClick={handleClick}
-      className="group  border  rounded-xl p-3  w-full border-gray-300 hover:shadow-xl bg-white hover:shadow-blue-500">
-      <div className="flex-1">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="px-3 py-1 text-xs font-semibold text-blue-600 -blue-50 rounded-full">
-            {category}
-          </span>
-          <span className="text-sm text-slate-400">{date}</span>
+    <>
+      <article className="relative animate-opacity flex flex-col w-auto gap-5 justify-center items-center">
+        <div className="flex justify-center gap-4 items-center">
+          <div
+            onClick={handleClick}
+            className="rounded-full size-10 hover:scale-120 transition-all duration-300 ease-in-out bg-blue-500 flex items-center justify-center cursor-pointer hover:bg-blue-700">
+            <svg
+              height="20px"
+              width="20px"
+              version="1.1"
+              id="Layer_1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+              fill="#f5f5f5">
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"></g>
+              <g id="SVGRepo_iconCarrier">
+                {" "}
+                <path d="M3.919,243.077c-0.223,0.33-0.414,0.675-0.618,1.015c-0.186,0.31-0.382,0.614-0.552,0.936 c-0.186,0.349-0.346,0.709-0.514,1.066c-0.157,0.332-0.321,0.658-0.464,0.998c-0.144,0.349-0.261,0.706-0.388,1.06 c-0.129,0.362-0.268,0.718-0.38,1.089c-0.107,0.358-0.188,0.721-0.279,1.085c-0.093,0.374-0.199,0.743-0.275,1.125 c-0.084,0.422-0.133,0.849-0.194,1.275c-0.047,0.326-0.109,0.645-0.143,0.976c-0.15,1.53-0.15,3.07,0,4.6 c0.034,0.33,0.096,0.65,0.143,0.976c0.061,0.425,0.11,0.853,0.194,1.275c0.076,0.382,0.18,0.749,0.275,1.125 c0.092,0.362,0.171,0.726,0.279,1.085c0.112,0.369,0.251,0.726,0.38,1.089c0.127,0.354,0.244,0.711,0.388,1.06 c0.143,0.34,0.307,0.666,0.464,0.998c0.168,0.355,0.327,0.715,0.514,1.064c0.171,0.321,0.366,0.625,0.552,0.936 c0.203,0.34,0.394,0.684,0.618,1.015c0.234,0.351,0.493,0.68,0.745,1.015c0.205,0.272,0.393,0.549,0.608,0.813 c0.489,0.596,1.002,1.168,1.548,1.711l116.36,116.36c4.544,4.544,10.501,6.817,16.455,6.817c5.956,0,11.913-2.271,16.455-6.817 c9.089-9.089,9.089-23.824,0-32.912l-76.636-76.636h409.272c12.853,0,23.273-10.42,23.273-23.273 c0-12.853-10.42-23.273-23.273-23.273H79.456l76.636-76.636c9.089-9.089,9.089-23.824,0-32.912c-9.087-9.089-23.824-9.089-32.912,0 L6.82,239.538c-0.546,0.543-1.06,1.116-1.548,1.711c-0.216,0.264-0.403,0.541-0.608,0.813 C4.412,242.397,4.153,242.726,3.919,243.077z"></path>{" "}
+              </g>
+            </svg>
+          </div>
+          <h2 className="text-4xl font-bold text-blue-500">{topic} </h2>
         </div>
-        <h3 className="text-xl font-bold text-slate-900 cursor-pointer group-hover:text-blue-600 transition-colors">
-          {title}
-        </h3>
-        <p className="text-sm text-slate-500 mt-1">
-          Iniciado por{" "}
-          <span className="font-medium text-slate-700">{author}</span>
-        </p>
-      </div>
+        <div className="flex flex-col gap-3">
+          {messages.map((message: any) => (
+            <ForumMessage topicMessage={message} />
+          ))}
+        </div>
 
-      <div className="mt-4 sm:mt-0 flex items-center gap-6">
-        <div className="text-center">
-          <p className="text-lg font-bold text-slate-900">{replies}</p>
-          <p className="text-xs text-slate-400 uppercase tracking-wider">
-            Respuestas
-          </p>
+        <div
+          onClick={handleOpen}
+          className="fixed bottom-30 right-10 size-10 rounded-full cursor-pointer transition-all duration-300 ease-in-out text-white font-bold flex items-center justify-center hover:scale-120 bg-blue-500 hover:bg-blue-700">
+          +
         </div>
-        <div className="p-2 rounded-lg bg-slate-50 group-hover:bg-blue-50 transition-colors">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="size-6 text-slate-400 group-hover:text-blue-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
+      </article>
+      <dialog
+        onClose={handleClose}
+        ref={dialogRef}
+        className="fixed inset-0 max-w-none max-h-none border-t border-slate-500 h-full w-full bg-transparent ">
+        <div className="w-auto h-full flex bg-transparent flex-col items-center justify-end  lg:justify-center gap-2">
+          <form
+            onSubmit={handleSubmit}
+            className="animate-bt bg-white h-3/5 flex flex-col relative items-center justify-center  p-3 lg:rounded-t-xl rounded-xl w-full lg:w-3/5">
+            <div className="flex w-full justify-center items-center">
+              <label className="text-xl p-3 font-bold text-blue-500">
+                Escribe tu mensaje:
+              </label>
+              <button
+                onClick={handleClose}
+                className="absolute right-1 -top-5 rounded-full bg-blue-500 text-white font-bold flex items-center hover:scale-120 transition-all duration-300 ease-in-out justify-center size-10 cursor-pointer hover:bg-blue-700">
+                x
+              </button>
+            </div>
+
+            <textarea
+              name="message"
+              id="message"
+              className="w-full h-full p-3 border border-slate-300 rounded-xl"></textarea>
+            <div className="p-2 flex gap-2 justify-center items-center w-full">
+              <MainButton type="submit" onClick={handleClose}>
+                Enviar
+              </MainButton>
+            </div>
+          </form>
         </div>
-      </div>
-    </article>
+      </dialog>
+    </>
   );
 }

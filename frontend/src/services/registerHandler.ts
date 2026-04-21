@@ -1,34 +1,32 @@
 interface RegisterData {
-    name:string;
-    surname:string;
+  name: string;
+  surname: string;
   email: string;
   password: string;
-  phone:string;
-
+  phone: string;
 }
 
 export async function handleRegister(userData: RegisterData, apiUrl: string) {
-
-
   try {
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(userData) 
+      body: JSON.stringify(userData),
     });
 
     if (!response.ok) {
-      throw new Error(`Error en el login: ${response.status}`);
+      const message = await response.json();
+      console.error("Error en el registro:", message.detail);
+      throw new Error(`Error en el registro: ${message.detail}`);
     }
 
     const data = await response.json();
     console.log("Respuesta del servidor:", data);
     return data;
-
   } catch (error) {
-    console.error("Error en handleLogin:", error);
-    throw error; 
+    console.error("Error en registro:", error);
+    throw error;
   }
 }

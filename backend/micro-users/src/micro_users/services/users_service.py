@@ -68,6 +68,7 @@ def authenticate_user(email: str, password: str, db: Session):
     Uso: Login
     """
     user = get_user_by_email(email, db)
+    print(f"user: {user}")
     if not user:
         return False
     if not verify_password(password, user.hashed_password):

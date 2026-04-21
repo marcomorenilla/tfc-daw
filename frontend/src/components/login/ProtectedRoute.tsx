@@ -6,6 +6,7 @@ import { navigate } from "astro:transitions/client";
 export const ProtectedRoute = ({ children }: any) => {
   const isLoading = useStore($isLoading);
   const user = useStore($user);
+  const [isErrored, setIsErrored] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:8200/users/api/v1/validate", {
@@ -16,11 +17,12 @@ export const ProtectedRoute = ({ children }: any) => {
       .then((data) => {
         if (data.id) {
           $user.set(data);
-          $isLoading.set(false);
         } else {
+          console.log("protegiendo ruta");
+          setIsErrored(true);
           $user.set(null);
-          navigate("/login");
         }
+        $isLoading.set(false);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -28,7 +30,12 @@ export const ProtectedRoute = ({ children }: any) => {
   return (
     <>
       {isLoading && <Loader />}
-      {!isLoading && children}
+      {!isLoading && !isErrored && children}
+      {!isLoading && isErrored && (
+        <h2 className="text-5xl text-center font-bold text-blue-500">
+          Necesitas iniciar sesión para ver el foro
+        </h2>
+      )}
     </>
   );
 };

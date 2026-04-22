@@ -9,7 +9,6 @@ import { set } from "astro:schema";
 
 export function ForumContainer() {
   const user: any = useStore($user);
-  console.log(user);
 
   const initialForums: any = useStore($forums);
   const isLoading = useStore($isLoading);

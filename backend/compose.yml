@@ -53,17 +53,21 @@ services:
     volumes:
       - ./micro-forum:/app/micro-forum   
   
-  #micro-images:
-  #  container_name: micro-images
-  #  build: 
-  #    context: ./micro-images
-  #  expose:
-  #    - 3000
-  #  networks:
-  #    - tfc
-  #  env_file:
-  #    - .env
-
+  micro-images:
+    container_name: micro-images
+    build: 
+      context: ./micro-images
+    expose:
+      - 3000
+    networks:
+      - tfc
+    env_file:
+      - .env
+    volumes:
+      - ./micro-images:/app/ 
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  
 
   gateway:
     image: nginx:alpine

@@ -13,31 +13,32 @@ Para su desarrollo se ha optado por una arquitectura de microservicios en el bac
 
 Es una carpeta contenedora de microservicios de los cuales algunos están pendientes de implementar:
 
-1. [ x ] Microservicio usuarios:
+1. [x] Microservicio usuarios:
 
-Encargado de gestionar toda la lógica de un CRUD completo de usuarios así como de autenticación y autorización a través de cookies y token JWT
+	- Encargado de gestionar toda la lógica de un CRUD completo de usuarios así como de autenticación y autorización a través de cookies y token **`JWT`**
 
-Se apoya sobre una BBDD relacional **`PostgreSQL`**
+	- Se apoya sobre una BBDD relacional **`PostgreSQL`**
 
-2. [ x ] Microservicio foro
+2. [x] Microservicio foro
 
-Encargado de gestionar las distintas categorías del foro, es un servicio de lectura y escritura.
-
-Utiliza una BBDD NoSQL **`MongoDB`** dentro del servicio **`Atlas`** con el Free Tier.
-
-3. [ x ] Microservicio imágenes
-
-Se encarga de servir y subir imágenes.
-
-Utiliza un contenedor **`MinIO`** alojado en mi ordenador personal que sirve como sistema de almacenamiento de objetos similar a **`AWS S3`** exponiendo una **`API`** para trabajar con él
-4. [ x ] Microservicio bicicletas
-
-Encargado de mostrar las bicicletas dentro de la web
+	- Encargado de gestionar las distintas categorías del foro, es un servicio de lectura y escritura.
 
 Utiliza una BBDD NoSQL **`MongoDB`** dentro del servicio **`Atlas`** con el Free Tier.
 
-5. [ ] Microservicio valoraciones -> Pendiente de implementar
-5. [ ] Microservicio reservas -> Pendiente de implementar
+3. [x] Microservicio imágenes
+
+	- Se encarga de servir y subir imágenes.
+
+	- Utiliza un contenedor **`MinIO`** alojado en mi ordenador personal que sirve como sistema de almacenamiento de objetos similar a **`AWS S3`** exponiendo una **`API`** para trabajar con él
+
+4. [x] Microservicio bicicletas
+
+	- Encargado de mostrar las bicicletas dentro de la web
+
+	- Utiliza una BBDD NoSQL **`MongoDB`** dentro del servicio **`Atlas`** con el Free Tier.
+
+5. [ ] Microservicio valoraciones: Pendiente de implementar
+5. [ ] Microservicio reservas: Pendiente de implementar
 
 ### Frontend
 
@@ -47,23 +48,23 @@ Al ser la primera versión no está todo lo refactorizado que debiese y contiene
 
 Dentro de la carpeta **`src`** encontramos varias carpetas importantes:
 
-- Pages: define el archivo.astro que se renderiza
-- Layouts: cada página renderiza un layout que contiene fragmentos HTML y un **`<slot/>`** donde se cargan los componentes.
-- Components: Carpeta que a su vez se divide en carpetas que se corresponden con las páginas.
+- **Pages**: define el archivo.astro que se renderiza
+- **Layouts**: cada página renderiza un layout que contiene fragmentos HTML y un **`<slot/>`** donde se cargan los componentes.
+- **Components**: Carpeta que a su vez se divide en carpetas que se corresponden con las páginas.
 	- Además hay una carpeta extra que contiene todos los componentes necesarios para el **`NavBar`** y una carpeta shared para componentes que no pertenecen a una sola página
-- Services: Contiene lógica para el login y registro y en siguientes versiones más lógica que no pertenece a los componentes.
-- Store: Contiene contexto que es común a varios componentes a través del paquete **`nanostores`** astro permite compartir así información evitando la necesidad de usar el contexto de React
-- Styles: Aunque el proyecto se desarrolla con **`TailwindCSS`** se definen animaciones personalizadas en **`global.css`**
+- **Services**: Contiene lógica para el login y registro y en siguientes versiones más lógica que no pertenece a los componentes.
+- **Store**: Contiene contexto que es común a varios componentes a través del paquete **`nanostores`** astro permite compartir así información evitando la necesidad de usar el contexto de React
+- **Styles**: Aunque el proyecto se desarrolla con **`TailwindCSS`** se definen animaciones personalizadas en **`global.css`**
 
 ## 2. Utilización:
 
 El punto de entrada de la web es la página de login / registro, no corresponde con el Index y podremos utilizar parcialmente la web sin disponer de un usuario.
 
-### Index
+### 2.1 Index
 
 Dentro de esta página a la que accedemos a través del NavBar encontramos un resumen de las 6 bicicletas mejor valoradas dentro de la colección.
 
-### Catálogo
+### 2.2 Catálogo
 
 Aquí se muestra la colección completa de bicicletas y cuenta con un filtro avanzado para poder interactuar con el catálogo.
 
@@ -71,9 +72,9 @@ La parte del filtro que indica _En posesión_ está pendiente de implementar ya 
 
 Actualmente devuelve toda la lista de bicicletas.
 
-### Foro
+### 2.3 Foro
 
-Es una ruta protegida mediante JWT, si no se dispone de un usuario, no se puede interactuar con esta página.
+Es una ruta protegida mediante **`JWT`**, si no se dispone de un usuario, no se puede interactuar con esta página.
 
 Si se dispone de un usuario encontraremos cuatro categorías dentro del foro
 
@@ -84,7 +85,7 @@ Si se dispone de un usuario encontraremos cuatro categorías dentro del foro
 
 Dentro del Foro solamente se pueden leer mensajes publicados en la categoría o pulsando sobre el botón + añadir un mensaje nuevo de texto en esta primera versión y planificado añadir archivos multimedia en la hoja de ruta de la aplicación.
 
-### Perfil
+### 2.4 Perfil
 
 Para acceder al perfil debemos estar logueados y pulsar sobre la imagen de usuario del navbar, esto abrirá una barra lateral que nos dará la opción de ir al perfil o cerrar sesión.
 
@@ -93,7 +94,7 @@ Dentro del perfil tenemos la opción de actualizar la imagen, actualizar nuestro
 De momento no se permite cambiar contraseña debiendo notificar al administrador si se desea realizar un cambio.
 
 
-## 4. Despliegue
+## 3. Despliegue
 
 > [!NOTE] 
 > - Este proyecto no está pensado para desplegarse en un equipo personal ya que se requieren conocimientos técnicos para ello.
@@ -102,36 +103,40 @@ De momento no se permite cambiar contraseña debiendo notificar al administrador
 1. Instala docker, docker compose, node, npm, yarn, pnpm en tu máquina
 2. Clona el repositorio en tu máquina.
 
-``` git
+``` sh
 git clone https://github.com/marcomorenilla/tfc-daw
 
 ```
 5. Dirígete a la carpeta backend
 
-``` Linux y MacOS
+``` sh
+# Linux y MacOS
 cd tfc-daw/backend
 
 ```
 
-``` Windows
+``` sh 
+#Windows
 cd tfc-daw\backend
 
 ``` 
 6. Levanta los contenedores
 
-```
+```sh
 docker compose up -d
 
 ```
 6. Dirígete a la carpeta frontend
 
 
-``` Linux y MacOS
+``` sh 
+# Linux y MacOS
 cd ../frontend
 
 ```
 
-``` Windows
+``` sh
+# Windows
 cd ..\backend
 
 ``` 
@@ -144,5 +149,9 @@ npm run dev
 ``` 
 8. Dirígete a `http://localhost:4321` para ver el frontend.
 
+
+## 4. Colaboración
+
 Cualquier problema o sugerencia de mejora siempre es bien recibida.
 
+Siéntete libre de abrir **Issues** o hacer un **Pull Request**

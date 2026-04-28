@@ -7,6 +7,7 @@ import { ProfileInfo } from "./ProfileInfo";
 import { ProfileEditForm } from "./ProfileEditForm";
 import { set } from "astro:schema";
 import { navigate } from "astro:transitions/client";
+import { ProfileHeader } from "./ProfileHeader";
 export function ProfileContainer({}) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const dialogImgRef = useRef<HTMLDialogElement>(null);
@@ -113,6 +114,7 @@ export function ProfileContainer({}) {
 
   return (
     <>
+      <ProfileHeader>Gestiona tu perfil</ProfileHeader>
       <div className="flex flex-col gap-3 p-2 items-center  justify-center  mb-5">
         <div className="relative">
           <img

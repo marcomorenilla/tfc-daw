@@ -1,9 +1,8 @@
 ---
 import ProfileLayout from "@/layouts/ProfileLayout.astro";
-import { ProfileContainer } from "@/components/profile/ProfileContainer";
-import { ProtectedRoute } from "@/components/login/ProtectedRoute";
+import { ProfileWrapper } from "@/components/profile/ProfileWrapper";
 ---
 
 <ProfileLayout title="Perfil">
-  <ProfileContainer client:only="react" />
+  <ProfileWrapper client:only="react" />
 </ProfileLayout>

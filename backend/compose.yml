@@ -51,7 +51,20 @@ services:
     env_file:
       - .env
     volumes:
-      - ./micro-forum:/app/micro-forum   
+      - ./micro-forum:/app/micro-forum    
+  bookings:
+    container_name: micro-bookings
+    build: 
+      context: .
+      dockerfile: micro-bookings/Dockerfile
+    expose:
+      - 8000
+    networks:
+      - tfc
+    env_file:
+      - .env
+    volumes:
+      - ./micro-bookings:/app/micro-bookings  
   
   micro-images:
     container_name: micro-images

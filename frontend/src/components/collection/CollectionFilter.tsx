@@ -29,7 +29,7 @@ export function CollectionFilter({
   const handleChecked = () => {
     console.log("click");
     setIsChecked(!isChecked);
-    const selectionValue = isChecked ? "unfiltered" : "rate";
+    const selectionValue = isChecked ? "unfiltered" : "booked";
     onSelectionChange(selectionValue);
   };
   const handleSubmit = (e: any) => {
@@ -124,7 +124,7 @@ export function CollectionFilter({
           tabIndex={-1}
           className={`group flex flex-1 cursor-pointer items-center justify-center gap-5 rounded-xl border px-2 py-3 ${isChecked ? "border-teal-600" : "border-gray-500"}`}>
           <div
-            className={`flex size-5 items-center justify-center rounded-sm border border-gray-500 ${isChecked ? "bg-teal-600" : ""}`}>
+            className={`flex size-5 items-center justify-center rounded-sm border border-slate-500 ${isChecked ? "bg-teal-600 text-white border-teal-500" : ""}`}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="14"
@@ -142,7 +142,7 @@ export function CollectionFilter({
             </svg>
           </div>
           <p className={`${isChecked ? "text-teal-600" : "text-gray-500"} `}>
-            En posesión
+            Reservadas
           </p>
         </section>
       </form>

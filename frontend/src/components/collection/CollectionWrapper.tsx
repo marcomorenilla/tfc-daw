@@ -4,6 +4,8 @@ import { CollectionFilter } from "./CollectionFilter";
 import { Loader } from "../shared/Loader";
 import { $bikes, $isLoading, $errorMsg, getBikes } from "@/store/bikesStore";
 import { useStore } from "@nanostores/react";
+import { $bookings, getBookingsByUser } from "@/store/bookingStore";
+import { $user } from "@/store/authStore";
 import { ErrorMsg } from "../shared/ErrorMsg";
 export default function CollectionWrapper() {
   const [isFiltered, setIsFiltered] = useState(false);
@@ -13,16 +15,19 @@ export default function CollectionWrapper() {
 
   const initialBikes: any = useStore($bikes) || [];
   const isLoading: boolean = useStore($isLoading);
-  const errorMsg = useStore($errorMsg);
+  const bookings: any = useStore($bookings);
+  const user: any = useStore($user);
+  const errorMsg: any = useStore($errorMsg);
 
   const asyncBikes = () => {
-    console.log("async");
     getBikes();
   };
 
   useEffect(() => {
-    console.log("render");
     asyncBikes();
+    if (user) {
+      getBookingsByUser(user.id);
+    }
   }, []);
 
   useEffect(() => {
@@ -52,10 +57,25 @@ export default function CollectionWrapper() {
       } else {
         result.sort((a, b) => a.rate - b.rate);
       }
+    } else if (sortCriteria === "booked") {
+      if (bookings && bookings.length > 0) {
+        result = bookings.map((booking: any) => {
+          const bike = [...initialBikes].find(
+            (bike: any) => bike["_id"] === booking.bike_id,
+          );
+          if (bike) return bike;
+        });
+        if (isReverse) {
+          result.sort((a, b) => b.name.localeCompare(a.name));
+        } else {
+          result.sort((a, b) => a.name.localeCompare(b.name));
+        }
+      } else {
+        result = [];
+      }
     }
-
     return result;
-  }, [filterText, sortCriteria, isReverse, initialBikes]);
+  }, [filterText, sortCriteria, isReverse, initialBikes, bookings]);
 
   const handleInputChange = (value: string) => {
     setFilterText(value);

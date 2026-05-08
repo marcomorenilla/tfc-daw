@@ -31,8 +31,8 @@ export function MenuList({ handleClick }: MenuProps) {
         <a href="/">
           <li className="border-b-2  border-amber-200">Inicio</li>
         </a>
-        <a href="/rating">
-          <li className="border-b-2  border-amber-200">Valoraciones</li>
+        <a href="/catalog">
+          <li className="border-b-2  border-amber-200">Catálogo</li>
         </a>
         <a href="/forum">
           <li>Foro</li>

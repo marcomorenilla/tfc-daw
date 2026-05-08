@@ -73,7 +73,7 @@ export function BookingContainer() {
             );
             return (
               <article
-                className="flex w-5/6 overflow-hidden justify-between items-between text-slate-600 border border-slate-200 rounded-xl "
+                className="flex flex-wrap w-full  overflow-hidden justify-between items-between text-slate-600 border border-slate-200 rounded-xl "
                 key={booking.id}>
                 <div className="">
                   <img

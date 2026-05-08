@@ -81,7 +81,7 @@ export function ForumTopic({ forum, onClick, onSubmit }: any) {
         </div>
         <div className="flex flex-col gap-3">
           {messages.map((message: any) => (
-            <ForumMessage topicMessage={message} />
+            <ForumMessage topicMessage={message} id={user.id} />
           ))}
         </div>
 
@@ -105,6 +105,7 @@ export function ForumTopic({ forum, onClick, onSubmit }: any) {
               </label>
               <button
                 onClick={handleClose}
+                type="button"
                 className="absolute right-1 -top-5 rounded-full bg-blue-500 text-white font-bold flex items-center hover:scale-120 transition-all duration-300 ease-in-out justify-center size-10 cursor-pointer hover:bg-blue-700">
                 x
               </button>

@@ -101,8 +101,8 @@ async def login(
         key="tfc_access_token",
         value=access_token,
         httponly=True,
-        secure=False,  # TODO: Cambiar a true cuando añada https
-        samesite="lax",
+        secure=True,
+        samesite="none",
         max_age=86400,
     )
 

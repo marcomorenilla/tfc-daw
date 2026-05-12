@@ -16,9 +16,9 @@ export default defineConfig({
       host: true,
       port: 4321,
       hmr: {
-        protocol: "wss",
-        host: "front.localhost",
-        clientPort: 443,
+        //protocol: "wss",
+        //host: "front.localhost",
+        //clientPort: 443,
       },
     },
   },

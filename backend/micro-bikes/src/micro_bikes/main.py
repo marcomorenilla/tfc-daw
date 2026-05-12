@@ -13,7 +13,12 @@ from pymongo import ReturnDocument
 load_dotenv(dotenv_path=find_dotenv())
 
 
-origins = ["http://localhost:4321", "http://127.0.0.1:4321"]
+origins = [
+    "http://localhost:4321",
+    "https://front.localhost",
+    "https://tfc.localhost",
+    "http://127.0.0.1:4321",
+]
 
 app = FastAPI(
     docs_url="/bikes/docs",

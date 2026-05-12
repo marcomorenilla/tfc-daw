@@ -6,7 +6,12 @@ from micro_users.db import Base, engine
 
 Base.metadata.create_all(bind=engine)
 
-origins = ["http://localhost:4321", "http://127.0.0.1:4321"]
+origins = [
+    "http://localhost:4321",
+    "https://front.localhost",
+    "https://tfc.localhost",
+    "http://127.0.0.1:4321",
+]
 
 app = FastAPI(
     docs_url="/users/docs",

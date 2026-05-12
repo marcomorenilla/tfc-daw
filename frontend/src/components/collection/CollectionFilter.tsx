@@ -42,7 +42,7 @@ export function CollectionFilter({
       <form
         id="filterForm"
         onSubmit={handleSubmit}
-        className="relative flex flex-wrap items-center justify-start gap-2">
+        className="relative flex flex-wrap items-center justify-between gap-2">
         <section className="group relative grow-2">
           <label htmlFor="textFilter"></label>
           <input
@@ -83,7 +83,7 @@ export function CollectionFilter({
             </g>
           </svg>
         </section>
-        <section className="flex-1">
+        <section className="">
           <select
             onChange={handleSelectionChange}
             className="cursor-pointer rounded-xl border border-gray-500 px-5 py-4 text-gray-500 focus:text-[bg-teal-600] focus:ring-2 focus:ring-teal-600"

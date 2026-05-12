@@ -8,7 +8,7 @@ export async function getBikes() {
   $isLoading.set(true);
   $errorMsg.set(null);
   try {
-    const res = await fetch("http://localhost:8200/bikes/api/v1/");
+    const res = await fetch("https://tfc.localhost/bikes/api/v1/");
     if (res.ok) {
       const data = await res.json();
       $bikes.set(data.bikes);

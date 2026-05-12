@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 
-export function ForumMessage({ topicMessage, id }: any) {
+export function ForumMessage({ topicMessage }: any) {
   const { user_name: userName, message } = topicMessage;
   const [image, setImage] = useState<string | null>(null);
   useEffect(() => {
     handleImage();
   }, []);
+
   const handleImage = () => {
     fetch(`https://tfc.localhost/minio/all`, {
       method: "GET",
@@ -16,7 +17,7 @@ export function ForumMessage({ topicMessage, id }: any) {
       .then((res) => res.json())
       .then((data) => {
         const image = data.find(
-          (item: any) => item.name.split(".")[0] == `${id}`,
+          (item: any) => item.name.split(".")[0] == `${topicMessage.user_id}`,
         );
         if (image) {
           const cacheBuster = `?t=${new Date().getTime()}`;

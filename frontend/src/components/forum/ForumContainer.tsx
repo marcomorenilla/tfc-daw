@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Loader } from "../shared/Loader";
 import { ForumCard } from "./ForumCard";
 import { set } from "astro:schema";
+import { ErrorMsg } from "../shared/ErrorMsg";
 
 export function ForumContainer() {
   const user: any = useStore($user);
@@ -47,6 +48,7 @@ export function ForumContainer() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(payload),
     })
       .then((res) => res.json())
@@ -71,14 +73,15 @@ export function ForumContainer() {
           ))}
         </section>
       )}
-      {isLoading && <Loader />}
-      {topic && (
+      {isLoading && !errorMsg && <Loader />}
+      {topic && !errorMsg && (
         <ForumTopic
           onSubmit={handleSubmit}
           onClick={handleReturn}
           forum={topicContent}
         />
       )}
+      {errorMsg && <ErrorMsg>Ups! Parece que hay un error...</ErrorMsg>}
     </>
   );
 }

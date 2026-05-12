@@ -9,7 +9,7 @@ export const ProtectedRoute = ({ children }: any) => {
   const [isErrored, setIsErrored] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:8200/users/api/v1/validate", {
+    fetch("https://tfc.localhost/users/api/v1/validate", {
       method: "POST",
       credentials: "include",
     })

@@ -21,6 +21,10 @@ export function BookingContainer() {
   const handleDelete = () => {
     fetch(`https://tfc.localhost/bookings/api/v1/${bikeToDelete}`, {
       method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
     })
       .then((res) => res.json())
       .then((data) => {

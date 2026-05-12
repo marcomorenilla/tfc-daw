@@ -21,7 +21,7 @@ import FooterLayout from "./FooterLayout.astro";
     <header
       class="flex bg-teal-600 text-white font-bold justify-between items-center p-7"
       transition:persist="main-nav">
-      <NavBar client:load />
+      <NavBar client:only="react" />
     </header>
     <slot />
   </body><FooterLayout />

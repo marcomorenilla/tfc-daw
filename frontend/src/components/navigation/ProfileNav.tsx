@@ -21,7 +21,7 @@ export function ProfileNav({}: any) {
     setIsDialogOpen(false);
   };
   const handleLogOut = () => {
-    fetch("http://localhost:8200/users/api/v1/logout", {
+    fetch("https://tfc.localhost/users/api/v1/logout", {
       method: "POST",
       credentials: "include",
     }).then((res) => {

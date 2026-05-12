@@ -19,7 +19,12 @@ PORT = os.getenv("POSTGRES_PORT")
 DATABASE_URL = f"postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 
 
-origins = ["http://localhost:4321", "https://tfc.localhost", "http://127.0.0.1:4321"]
+origins = [
+    "http://localhost:4321",
+    "https://front.localhost",
+    "https://tfc.localhost",
+    "http://127.0.0.1:4321",
+]
 
 app = FastAPI(
     docs_url="/bookings/docs",
@@ -32,7 +37,8 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )

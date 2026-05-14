@@ -37,8 +37,13 @@ Utiliza una BBDD NoSQL **`MongoDB`** dentro del servicio **`Atlas`** con el Free
 
 	- Utiliza una BBDD NoSQL **`MongoDB`** dentro del servicio **`Atlas`** con el Free Tier.
 
-5. [ ] Microservicio valoraciones: Pendiente de implementar
-5. [ ] Microservicio reservas: Pendiente de implementar
+5. [x] Microservicio reservas
+	
+	- Se responsabiliza de realizar las reservas
+	
+	- Utiliza como BBDD **`PostgreSQL`** 
+
+6. [ ] Microservicio valoraciones: Pendiente de implementar
 
 ### Frontend
 
@@ -58,11 +63,13 @@ Dentro de la carpeta **`src`** encontramos varias carpetas importantes:
 
 ## 2. Utilización:
 
-El punto de entrada de la web es la página de login / registro, no corresponde con el Index y podremos utilizar parcialmente la web sin disponer de un usuario.
-
 ### 2.1 Index
 
 Dentro de esta página a la que accedemos a través del NavBar encontramos un resumen de las 6 bicicletas mejor valoradas dentro de la colección.
+
+En caso que tengamos un usuario registrado e iniciemos sesión, se nos mostrará desbloqueado el botón **`Reservar`** que abre un modal para realizar una reserva.
+
+Si no tenemos sesión iniciada, aparece  un mensaje en las tarjetas que indica que necesitamos iniciar sesión para poder reservar una bicicleta.
 
 ### 2.2 Catálogo
 
@@ -71,6 +78,10 @@ Aquí se muestra la colección completa de bicicletas y cuenta con un filtro ava
 La parte del filtro que indica _En posesión_ está pendiente de implementar ya que depende directamente del sistema de reservas que todavía no funciona y pretende traer las bicicletas que se hayan reservado.
 
 Actualmente devuelve toda la lista de bicicletas.
+
+En caso que tengamos un usuario registrado e iniciemos sesión, se nos mostrará desbloqueado el botón **`Reservar`** que abre un modal para realizar una reserva.
+
+Si no tenemos sesión iniciada, aparece  un mensaje en las tarjetas que indica que necesitamos iniciar sesión para poder reservar una bicicleta.
 
 ### 2.3 Foro
 

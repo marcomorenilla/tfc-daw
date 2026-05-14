@@ -11,6 +11,8 @@ app.use(
       "https://front.localhost",
       "https://tfc.localhost",
     ],
+    credentials: true,
+    methods: ["GET", "POST"],
   }),
 );
 const port = 3000;

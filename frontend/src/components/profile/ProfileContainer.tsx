@@ -53,18 +53,15 @@ export function ProfileContainer({}) {
   const handleImgSubmit = (e: any) => {
     e.preventDefault();
     const formData = new FormData();
-    if (file) {
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (file && allowedTypes.includes(file.type)) {
       formData.append("image", file);
       const fileExtension = file.name.split(".").pop();
       const fileName = `${user.id}.${fileExtension}`;
       formData.append("fileName", `${fileName}`);
-      console.log("formData", JSON.stringify(formData));
       fetch(`https://tfc.localhost/upload`, {
         method: "POST",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: formData,
       })
         .then((res) => res.json())
@@ -166,6 +163,7 @@ export function ProfileContainer({}) {
                 id="avatar"
                 className="hidden"
                 name="avatar"
+                accept="image/png, image/jpg, image/jpeg, image/webp"
                 type="file"
               />
             </label>

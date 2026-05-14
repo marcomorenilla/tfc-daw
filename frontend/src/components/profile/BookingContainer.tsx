@@ -71,6 +71,7 @@ export function BookingContainer() {
         ))}
       <section className="flex flex-col items-center justify-center gap-3 w-full">
         {bookings &&
+          bikes &&
           bookings.map((booking: any) => {
             const bike = bikes.find(
               (bike: any) => bike["_id"] == booking.bike_id,

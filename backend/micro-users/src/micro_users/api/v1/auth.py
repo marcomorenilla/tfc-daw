@@ -102,7 +102,7 @@ async def login(
         value=access_token,
         httponly=True,
         secure=True,
-        samesite="none",
+        samesite="Lax",
         max_age=86400,
     )
 

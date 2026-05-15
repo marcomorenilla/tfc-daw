@@ -101,9 +101,11 @@ async def login(
         key="tfc_access_token",
         value=access_token,
         httponly=True,
-        secure=True,
-        samesite="Lax",
+        secure=False,
+        samesite="none",
         max_age=86400,
+        domain=".localhost",
+        path="/",
     )
 
     return {
@@ -158,9 +160,11 @@ async def update_user_route(
         key="tfc_access_token",
         value=access_token,
         httponly=True,
-        secure=False,  # TODO: Cambiar a true cuando añada https
-        samesite="lax",
+        secure=True,
+        samesite="none",
         max_age=86400,
+        domain=".localhost",
+        path="/",
     )
     return {
         "access_token": access_token,
@@ -192,11 +196,23 @@ async def delete_user_route(
     db.delete(user)
     db.commit()
 
-    response.delete_cookie("tfc_access_token")
+    response.delete_cookie(
+        key="tfc_access_token",
+        path="/",
+        domain=".localhost",
+        secure=True,
+        samesite="none",
+    )
     return user
 
 
 @router.post("/logout", tags=["Logout"])
 async def logout(response: Response):
-    response.delete_cookie("tfc_access_token")
+    response.delete_cookie(
+        key="tfc_access_token",
+        path="/",
+        domain=".localhost",
+        secure=True,
+        samesite="none",
+    )
     return {"message": "Logout successful"}

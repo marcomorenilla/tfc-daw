@@ -23,10 +23,12 @@ export function ForumContainer() {
   };
 
   useEffect(() => {
+    console.log("user forum container", user);
     asyncForums();
   }, []);
 
   useEffect(() => {
+    console.log("user forum container", user);
     if (topic) {
       const currentForum = initialForums.find((f: any) => f.topic === topic);
       setTopicContent(currentForum);

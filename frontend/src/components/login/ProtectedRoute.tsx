@@ -9,6 +9,7 @@ export const ProtectedRoute = ({ children }: any) => {
   const [isErrored, setIsErrored] = useState(false);
 
   useEffect(() => {
+    console.log("protegiendo ruta");
     fetch("https://tfc.localhost/users/api/v1/validate", {
       method: "POST",
       credentials: "include",
@@ -17,6 +18,7 @@ export const ProtectedRoute = ({ children }: any) => {
       .then((data) => {
         if (data.id) {
           $user.set(data);
+          console.log("user", user);
         } else {
           console.log("protegiendo ruta");
           setIsErrored(true);
@@ -30,7 +32,7 @@ export const ProtectedRoute = ({ children }: any) => {
   return (
     <>
       {isLoading && <Loader />}
-      {!isLoading && !isErrored && children}
+      {!isLoading && !isErrored && user && children}
       {!isLoading && isErrored && (
         <h2 className="text-5xl text-center font-bold text-blue-500">
           Necesitas iniciar sesión para ver el foro

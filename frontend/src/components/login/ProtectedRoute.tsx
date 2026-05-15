@@ -10,7 +10,7 @@ export const ProtectedRoute = ({ children }: any) => {
 
   useEffect(() => {
     console.log("protegiendo ruta");
-    fetch("https://tfc.localhost/users/api/v1/validate", {
+    fetch("http://localhost:8200/users/api/v1/validate", {
       method: "POST",
       credentials: "include",
     })

@@ -19,7 +19,7 @@ export function BookingContainer() {
   const [bikeToDelete, setBikeToDelete] = useState<any>(null);
 
   const handleDelete = () => {
-    fetch(`https://tfc.localhost/bookings/api/v1/${bikeToDelete}`, {
+    fetch(`http://localhost:8200/bookings/api/v1/${bikeToDelete}`, {
       method: "DELETE",
       credentials: "include",
       headers: {

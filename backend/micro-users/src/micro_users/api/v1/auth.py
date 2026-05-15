@@ -98,14 +98,13 @@ async def login(
     access_token = create_session_token(jwt_payload)
 
     response.set_cookie(
-        key="tfc_access_token",
+        key="tfc_token",
         value=access_token,
         httponly=True,
         secure=False,
-        samesite="none",
-        max_age=86400,
-        domain=".localhost",
         path="/",
+        samesite="lax",
+        max_age=86400,
     )
 
     return {
@@ -157,14 +156,13 @@ async def update_user_route(
     access_token = create_session_token(jwt_payload)
 
     response.set_cookie(
-        key="tfc_access_token",
+        key="tfc_token",
         value=access_token,
         httponly=True,
-        secure=True,
-        samesite="none",
-        max_age=86400,
-        domain=".localhost",
+        secure=False,
         path="/",
+        samesite="lax",
+        max_age=86400,
     )
     return {
         "access_token": access_token,
@@ -197,11 +195,11 @@ async def delete_user_route(
     db.commit()
 
     response.delete_cookie(
-        key="tfc_access_token",
+        key="tfc_token",
+        httponly=True,
+        secure=False,
         path="/",
-        domain=".localhost",
-        secure=True,
-        samesite="none",
+        samesite="lax",
     )
     return user
 
@@ -209,10 +207,10 @@ async def delete_user_route(
 @router.post("/logout", tags=["Logout"])
 async def logout(response: Response):
     response.delete_cookie(
-        key="tfc_access_token",
+        key="tfc_token",
+        httponly=True,
+        secure=False,
         path="/",
-        domain=".localhost",
-        secure=True,
-        samesite="none",
+        samesite="lax",
     )
     return {"message": "Logout successful"}

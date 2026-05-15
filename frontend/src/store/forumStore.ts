@@ -9,7 +9,7 @@ export async function getForums() {
   $isLoading.set(true);
   $errorMsg.set(null);
   try {
-    const res = await fetch("https://tfc.localhost/forum/api/v1/", {
+    const res = await fetch("http://localhost:8200/forum/api/v1/", {
       credentials: "include",
     });
     if (res.ok) {

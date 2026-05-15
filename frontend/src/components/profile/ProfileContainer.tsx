@@ -59,7 +59,7 @@ export function ProfileContainer({}) {
       const fileExtension = file.name.split(".").pop();
       const fileName = `${user.id}.${fileExtension}`;
       formData.append("fileName", `${fileName}`);
-      fetch(`https://tfc.localhost/upload`, {
+      fetch(`http://localhost:8200/upload`, {
         method: "POST",
         credentials: "include",
         body: formData,
@@ -75,7 +75,7 @@ export function ProfileContainer({}) {
   };
 
   const handleImage = () => {
-    fetch(`https://tfc.localhost/minio/all`, {
+    fetch(`http://localhost:8200/minio/all`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -90,14 +90,14 @@ export function ProfileContainer({}) {
           const cacheBuster = `?t=${new Date().getTime()}`;
           setImage(image.url + cacheBuster);
         } else {
-          setImage("https://tfc.localhost/images/user.jpg");
+          setImage("http://localhost:8200/images/user.jpg");
         }
       })
       .catch((err) => console.log(err));
   };
 
   const handleDelete = () => {
-    fetch(`https://tfc.localhost/users/api/v1/${user.id}`, {
+    fetch(`http://localhost:8200/users/api/v1/${user.id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -119,7 +119,7 @@ export function ProfileContainer({}) {
       <div className="flex flex-col gap-3 p-2 items-center  justify-center  mb-5">
         <div className="relative">
           <img
-            src={image || "https://tfc.localhost/images/user.jpg"}
+            src={image || "http://localhost:8200/images/user.jpg"}
             alt="imagen de usuario"
             loading="lazy"
             className="size-50 rounded-full"

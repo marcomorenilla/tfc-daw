@@ -8,7 +8,7 @@ export function ForumMessage({ topicMessage }: any) {
   }, []);
 
   const handleImage = () => {
-    fetch(`https://tfc.localhost/minio/all`, {
+    fetch(`http://localhost:8200/minio/all`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -23,7 +23,7 @@ export function ForumMessage({ topicMessage }: any) {
           const cacheBuster = `?t=${new Date().getTime()}`;
           setImage(image.url + cacheBuster);
         } else {
-          setImage("https://tfc.localhost/images/user.jpg");
+          setImage("http://localhost:8200/images/user.jpg");
         }
       })
       .catch((err) => console.log(err));
@@ -33,7 +33,7 @@ export function ForumMessage({ topicMessage }: any) {
     <article className="w-full border border-slate-300 rounded-xl flex flex-col gap-2 justify-center items-start">
       <div className="flex justify-start gap-2 items-center border-b border-slate-300 w-full p-2">
         <img
-          src={image || "https://tfc.localhost/images/user.jpg"}
+          src={image || "http://localhost:8200/images/user.jpg"}
           alt=" Imagen avatar usuario"
           loading="lazy"
           className="size-10 rounded-full flex items-center justify-center"

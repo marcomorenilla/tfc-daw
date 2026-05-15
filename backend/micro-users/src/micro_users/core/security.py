@@ -32,7 +32,7 @@ def get_current_user(request: Request):
     Extrae al usuario  del jwt y lo busca en bbdd
     Uso: Acceso a rutas protegidas
     """
-    token = request.cookies.get("tfc_access_token")
+    token = request.cookies.get("tfc_token")
     print(f"DEBUG: token: {token}")
     if token is None:
         return HTTPException(status_code=401, detail="No token provided")

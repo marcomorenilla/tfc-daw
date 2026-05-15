@@ -9,7 +9,7 @@ export async function getBookings() {
   $isLoading.set(true);
   $errorMsg.set(null);
   try {
-    const res = await fetch("https://tfc.localhost/bookings/api/v1/", {
+    const res = await fetch("http://localhost:8200/bookings/api/v1/", {
       credentials: "include",
     });
     if (res.ok) {
@@ -31,7 +31,7 @@ export async function makeBooking(data: any) {
   $isLoading.set(true);
   $errorMsg.set(null);
   try {
-    const res = await fetch("https://tfc.localhost/bookings/api/v1/", {
+    const res = await fetch("http://localhost:8200/bookings/api/v1/", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -56,7 +56,7 @@ export async function getBookingsByUser(userId: Number) {
   $errorMsg.set(null);
   try {
     const res = await fetch(
-      `https://tfc.localhost/bookings/api/v1/user/${userId}`,
+      `http://localhost:8200/bookings/api/v1/user/${userId}`,
       {
         credentials: "include",
       },

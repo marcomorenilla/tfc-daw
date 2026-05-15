@@ -11,15 +11,5 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
-
-    server: {
-      host: true,
-      port: 4321,
-      hmr: {
-        //protocol: "wss",
-        //host: "front.localhost",
-        //clientPort: 443,
-      },
-    },
   },
 });

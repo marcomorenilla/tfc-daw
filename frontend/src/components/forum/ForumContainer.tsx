@@ -45,7 +45,7 @@ export function ForumContainer() {
   };
 
   const handleSubmit = (payload: any, id: any) => {
-    fetch(`https://tfc.localhost/forum/api/v1/${id}`, {
+    fetch(`http://localhost:8200/forum/api/v1/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

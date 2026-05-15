@@ -24,6 +24,7 @@ origins = [
     "https://front.localhost",
     "https://tfc.localhost",
     "http://127.0.0.1:4321",
+    "http://localhost:8200/",
 ]
 
 app = FastAPI(

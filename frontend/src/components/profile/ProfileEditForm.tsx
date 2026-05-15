@@ -35,7 +35,7 @@ export function ProfileEditForm({ handleConfirm }: any) {
       password: "string",
     };
 
-    fetch(`https://tfc.localhost/users/api/v1/${user.id}`, {
+    fetch(`http://localhost:8200/users/api/v1/${user.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
